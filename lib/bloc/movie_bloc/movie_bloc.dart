@@ -9,7 +9,7 @@ import './movie_event.dart';
 import './movie_state.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
-  MovieRepositoryApi movieRepository;
+  final MovieRepositoryApi movieRepository;
 
   MovieBloc({@required this.movieRepository}) : super(MovieInitialState());
 
@@ -18,7 +18,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     if (event is FetchMovieEvent) {
       yield MovieLoadingState();
       try {
-        List<Movie> movies = await movieRepository.getMovies(event.movieType);
+        List<Movie> movies = await movieRepository.fetchMovies(event.movieType);
         yield MovieLoadedState(movies: movies);
       } catch (e) {
         yield MovieErrorState(message: e.toString());
