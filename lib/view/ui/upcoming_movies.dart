@@ -73,7 +73,12 @@ class _MoviePageViewState extends State<MoviePageView> {
                     title: movie.title,
                   );
                 })),
-        Positioned(top: 275, left: 12, child: LineIndiator()),
+        Positioned(
+            //top: 280,
+            //left: 12,
+            child: LineIndiator(
+          controller: _pageController,
+        )),
       ],
     );
   }
