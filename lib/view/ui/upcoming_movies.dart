@@ -14,9 +14,9 @@ class UpcomingMoviesWidget extends StatelessWidget {
     // ignore: missing_return
     return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
       if (state is MovieInitialState) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: const CircularProgressIndicator());
       } else if (state is MovieLoadingState) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: const CircularProgressIndicator());
       } else if (state is MovieLoadedState) {
         return MoviePageView(state.movies.sublist(0, 5));
       } else if (state is MovieErrorState) {
@@ -71,14 +71,12 @@ class _MoviePageViewState extends State<MoviePageView> {
                   return MovieItem(
                     imageUrl: imageUrl,
                     title: movie.title,
+                    controller: _pageController,
                   );
                 })),
-        Positioned(
-            //top: 280,
-            //left: 12,
-            child: LineIndiator(
+        LineIndiator(
           controller: _pageController,
-        )),
+        ),
       ],
     );
   }
@@ -87,8 +85,12 @@ class _MoviePageViewState extends State<MoviePageView> {
 class MovieItem extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final PageController controller;
 
-  const MovieItem({@required this.imageUrl, @required this.title});
+  const MovieItem(
+      {@required this.imageUrl,
+      @required this.title,
+      @required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -98,26 +100,29 @@ class MovieItem extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: CachedNetworkImage(
             imageUrl: imageUrl,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(17),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(3, 4),
-                    blurRadius: 6,
-                    color: Colors.black54,
-                  )
-                ],
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: CachedNetworkImageProvider(imageUrl),
+            //alignment: Alignment(-offset.abs(), 0),
+            imageBuilder: (context, imageProvider) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(17),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(3, 4),
+                      blurRadius: 6,
+                      color: Colors.black54,
+                    )
+                  ],
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(imageUrl),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
             placeholder: (context, url) => Align(
                 alignment: Alignment.center,
-                child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+                child: const CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
       ),

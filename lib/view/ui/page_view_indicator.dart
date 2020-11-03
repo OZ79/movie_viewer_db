@@ -10,7 +10,7 @@ class LineIndiator extends StatefulWidget {
 }
 
 class _LineIndiatorState extends State<LineIndiator> {
-  Alignment _alignment = Alignment(-0.93, -0.15);
+  Alignment _alignment = Alignment(-0.93, -0.12);
 
   @override
   void initState() {
@@ -19,7 +19,7 @@ class _LineIndiatorState extends State<LineIndiator> {
     widget.controller.addListener(() {
       setState(() {
         _alignment =
-            Alignment(0.93 * (-1 + 1.83 * widget.controller.page / 4), -0.15);
+            Alignment(0.93 * (-1 + 1.58 * widget.controller.page / 4), -0.12);
       });
     });
   }
@@ -27,25 +27,30 @@ class _LineIndiatorState extends State<LineIndiator> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       alignment: _alignment,
       curve: Curves.easeOutQuint,
-      child: CustomPaint(
-        painter: IndiatorPainter(),
+      child: const CustomPaint(
+        painter: const IndiatorPainter(),
       ),
     );
   }
 }
 
 class IndiatorPainter extends CustomPainter {
+  const IndiatorPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = Colors.blue[600]
+    final paint = Paint()
+      ..color = Colors.black87
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(0, 0) & const Size(30, 3), paint);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            const Offset(0, 0) & const Size(80, 4), Radius.circular(9)),
+        paint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
