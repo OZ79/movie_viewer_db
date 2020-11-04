@@ -56,27 +56,30 @@ class _MoviePageViewState extends State<MoviePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        SizedBox(
-            height: 270,
-            child: PageView.builder(
-                controller: _pageController,
-                itemCount: widget.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final movie = widget.data[index];
-                  final imageUrl = "$IMAGE_URL_500${movie.backPoster}";
-                  return MovieItem(
-                    imageUrl: imageUrl,
-                    title: movie.title,
-                    index: index,
-                    controller: _pageController,
-                  );
-                })),
-        LineIndiator(
-          controller: _pageController,
-        ),
-      ],
+    return SizedBox(
+      height: 300,
+      child: Stack(
+        children: <Widget>[
+          SizedBox(
+              height: 270,
+              child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: widget.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final movie = widget.data[index];
+                    final imageUrl = "$IMAGE_URL_500${movie.backPoster}";
+                    return MovieItem(
+                      imageUrl: imageUrl,
+                      title: movie.title,
+                      index: index,
+                      controller: _pageController,
+                    );
+                  })),
+          LineIndiator(
+            controller: _pageController,
+          ),
+        ],
+      ),
     );
   }
 }

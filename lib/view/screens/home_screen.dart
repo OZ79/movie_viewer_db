@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
@@ -22,8 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topCenter,
-      child: UpcomingMoviesWidget(),
-    );
+        alignment: Alignment.topCenter,
+        //color: Colors.yellow,
+        child: UpcomingMoviesWidget());
   }
 }
