@@ -45,7 +45,7 @@ class _MoviePageViewState extends State<MoviePageView> {
   void initState() {
     super.initState();
 
-    _pageController = PageController();
+    _pageController = PageController(viewportFraction: 0.91);
   }
 
   @override
@@ -57,7 +57,6 @@ class _MoviePageViewState extends State<MoviePageView> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      overflow: Overflow.visible,
       children: <Widget>[
         SizedBox(
             height: 270,
@@ -66,11 +65,11 @@ class _MoviePageViewState extends State<MoviePageView> {
                 itemCount: widget.data.length,
                 itemBuilder: (BuildContext context, int index) {
                   final movie = widget.data[index];
-                  final imageUrl = "$IMAGE_URL_300${movie.backPoster}";
-                  //print(imageUrl);
+                  final imageUrl = "$IMAGE_URL_500${movie.backPoster}";
                   return MovieItem(
                     imageUrl: imageUrl,
                     title: movie.title,
+                    index: index,
                     controller: _pageController,
                   );
                 })),
@@ -82,15 +81,44 @@ class _MoviePageViewState extends State<MoviePageView> {
   }
 }
 
-class MovieItem extends StatelessWidget {
+class MovieItem extends StatefulWidget {
   final String imageUrl;
   final String title;
+  final int index;
   final PageController controller;
 
   const MovieItem(
       {@required this.imageUrl,
       @required this.title,
+      @required this.index,
       @required this.controller});
+
+  @override
+  _MovieItemState createState() => _MovieItemState();
+}
+
+class _MovieItemState extends State<MovieItem> {
+  Alignment _alignment = Alignment(0, 0);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(controllerListener);
+  }
+
+  void controllerListener() {
+    setState(() {
+      final offset = widget.index -
+          (widget.controller.page ?? widget.controller.initialPage);
+      _alignment = Alignment(offset * 3, 0);
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(controllerListener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +127,7 @@ class MovieItem extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            //alignment: Alignment(-offset.abs(), 0),
+            imageUrl: widget.imageUrl,
             imageBuilder: (context, imageProvider) {
               return Container(
                 decoration: BoxDecoration(
@@ -113,8 +140,9 @@ class MovieItem extends StatelessWidget {
                     )
                   ],
                   image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: CachedNetworkImageProvider(imageUrl),
+                    alignment: _alignment,
+                    fit: BoxFit.none,
+                    image: imageProvider,
                   ),
                 ),
               );
@@ -129,13 +157,13 @@ class MovieItem extends StatelessWidget {
       SizedBox(
         width: 300,
         child: Text(
-          title,
+          widget.title,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic,
-              fontSize: 17,
+              fontSize: 18,
               color: Colors.black54),
         ),
       )
