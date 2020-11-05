@@ -10,7 +10,7 @@ class LineIndiator extends StatefulWidget {
 }
 
 class _LineIndiatorState extends State<LineIndiator> {
-  Alignment _alignment = Alignment(-0.67, 0.95);
+  Alignment _alignment = Alignment(-0.4, 0.95);
 
   @override
   void initState() {
@@ -19,7 +19,7 @@ class _LineIndiatorState extends State<LineIndiator> {
     widget.controller.addListener(() {
       setState(() {
         _alignment =
-            Alignment(0.67 * (-1 + 2 * widget.controller.page / 4), 0.95);
+            Alignment(0.4 * (-1 + 2 * widget.controller.page / 4), 0.95);
       });
     });
   }
@@ -34,12 +34,14 @@ class _LineIndiatorState extends State<LineIndiator> {
         child: const IndiatorPainter(Colors.black87),
       ),
       Container(
-        //color: Colors.yellow,
         alignment: Alignment(0, 0.95),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List<Widget>.generate(
-              5, (i) => const IndiatorPainter(Colors.black38)),
+        child: Container(
+          width: 200,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List<Widget>.generate(
+                5, (i) => const IndiatorPainter(Colors.black38)),
+          ),
         ),
       )
     ]);
@@ -54,6 +56,7 @@ class IndiatorPainter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
+      size: Size(30, 4),
       painter: LineTrackPainter(color),
     );
   }
@@ -71,7 +74,7 @@ class LineTrackPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            const Offset(-20, 0) & const Size(40, 4), Radius.circular(9)),
+            const Offset(0, 0) & const Size(30, 4), Radius.circular(9)),
         paint);
   }
 
