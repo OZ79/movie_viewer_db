@@ -139,7 +139,7 @@ class _MovieItemState extends State<MovieItem> {
                     BoxShadow(
                       offset: const Offset(3, 4),
                       blurRadius: 6,
-                      color: Colors.black54,
+                      color: Colors.black26,
                     )
                   ],
                   image: DecorationImage(
@@ -166,7 +166,7 @@ class _MovieItemState extends State<MovieItem> {
           style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic,
-              fontSize: 18,
+              fontSize: 17,
               color: Colors.black54),
         ),
       )

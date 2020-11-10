@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/view/screens/home_screen.dart';
@@ -8,6 +9,7 @@ import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
 
 void main() {
+  //debugPaintSizeEnabled = true;
   Bloc.observer = SimpleBlocObserver();
   runApp(App(movieRepository: MovieRepository()));
 }
