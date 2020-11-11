@@ -20,9 +20,12 @@ class UpcomingMoviesWidget extends StatelessWidget {
       } else if (state is MovieLoadedState) {
         return MoviePageView(state.movies.sublist(0, 5));
       } else if (state is MovieErrorState) {
-        return Text(
-          state.message,
-          style: TextStyle(fontSize: 24, color: Color(0xfffbfbfbf)),
+        return Center(
+          child: Text(
+            state.message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20, color: Colors.black54),
+          ),
         );
       }
     });
@@ -106,10 +109,20 @@ class _MovieItemState extends State<MovieItem> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(controllerListener);
+
+    widget.controller.addListener(_handleChange);
   }
 
-  void controllerListener() {
+  @override
+  void didUpdateWidget(MovieItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller.removeListener(_handleChange);
+      widget.controller.addListener(_handleChange);
+    }
+  }
+
+  void _handleChange() {
     setState(() {
       final offset = widget.index -
           (widget.controller.page ?? widget.controller.initialPage);
@@ -119,7 +132,7 @@ class _MovieItemState extends State<MovieItem> {
 
   @override
   void dispose() {
-    widget.controller.removeListener(controllerListener);
+    widget.controller.removeListener(_handleChange);
     super.dispose();
   }
 

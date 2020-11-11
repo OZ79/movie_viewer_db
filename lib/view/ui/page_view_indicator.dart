@@ -10,18 +10,35 @@ class LineIndiator extends StatefulWidget {
 }
 
 class _LineIndiatorState extends State<LineIndiator> {
-  Alignment _alignment = Alignment(-0.31, 0.9);
+  Alignment _alignment = Alignment(-0.31, 0.88);
 
   @override
   void initState() {
     super.initState();
 
-    widget.controller.addListener(() {
-      setState(() {
-        _alignment =
-            Alignment(0.31 * (-1 + 2 * widget.controller.page / 4), 0.9);
-      });
+    widget.controller.addListener(_handleChange);
+  }
+
+  void _handleChange() {
+    setState(() {
+      _alignment =
+          Alignment(0.31 * (-1 + 2 * widget.controller.page / 4), 0.88);
     });
+  }
+
+  @override
+  void didUpdateWidget(LineIndiator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller.removeListener(_handleChange);
+      widget.controller.addListener(_handleChange);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_handleChange);
+    super.dispose();
   }
 
   @override
@@ -34,7 +51,7 @@ class _LineIndiatorState extends State<LineIndiator> {
         child: const IndiatorPainter(Colors.black54),
       ),
       Container(
-        alignment: const Alignment(0, 0.9),
+        alignment: const Alignment(0, 0.88),
         child: Container(
           width: 160,
           child: Row(
