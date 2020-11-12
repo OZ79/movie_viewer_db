@@ -1,67 +1,48 @@
 import 'package:flutter/material.dart';
 
-class LineIndiator extends StatefulWidget {
+class LineIndiator extends StatelessWidget {
   final PageController controller;
 
   LineIndiator({@required this.controller});
 
   @override
-  _LineIndiatorState createState() => _LineIndiatorState();
+  Widget build(BuildContext context) {
+    return Stack(children: <Widget>[
+      AnimatedBuilder(
+          animation: controller,
+          builder: (_, child) {
+            final double offset =
+                30 * (controller.page ?? controller.initialPage.toDouble());
+            return Transform.translate(
+              offset: Offset(offset, 0),
+              child: child,
+            );
+          },
+          child: Container(
+            alignment: const Alignment(-0.31, 0.88),
+            child: const IndiatorPainter(Colors.black54),
+          )),
+      const IndicatorTrack(),
+    ]);
+  }
 }
 
-class _LineIndiatorState extends State<LineIndiator> {
-  Alignment _alignment = Alignment(-0.31, 0.88);
-
-  @override
-  void initState() {
-    super.initState();
-
-    widget.controller.addListener(_handleChange);
-  }
-
-  void _handleChange() {
-    setState(() {
-      _alignment =
-          Alignment(0.31 * (-1 + 2 * widget.controller.page / 4), 0.88);
-    });
-  }
-
-  @override
-  void didUpdateWidget(LineIndiator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      oldWidget.controller.removeListener(_handleChange);
-      widget.controller.addListener(_handleChange);
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_handleChange);
-    super.dispose();
-  }
+class IndicatorTrack extends StatelessWidget {
+  const IndicatorTrack();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      AnimatedContainer(
-        duration: const Duration(seconds: 1),
-        alignment: _alignment,
-        curve: Curves.easeOutQuint,
-        child: const IndiatorPainter(Colors.black54),
-      ),
-      Container(
-        alignment: const Alignment(0, 0.88),
-        child: Container(
-          width: 160,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List<Widget>.generate(
-                5, (i) => const IndiatorPainter(Colors.black38)),
-          ),
+    return Container(
+      alignment: const Alignment(0, 0.88),
+      child: Container(
+        width: 160,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List<Widget>.generate(
+              5, (i) => const IndiatorPainter(Colors.black38)),
         ),
-      )
-    ]);
+      ),
+    );
   }
 }
 
