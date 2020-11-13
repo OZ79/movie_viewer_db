@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
+import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/page_view_indicator.dart';
 
 import '../../config.dart';
@@ -11,13 +12,8 @@ import '../../config.dart';
 class UpcomingMoviesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // ignore: missing_return
     return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
-      if (state is MovieInitialState) {
-        return Center(child: const CircularProgressIndicator());
-      } else if (state is MovieLoadingState) {
-        return Center(child: const CircularProgressIndicator());
-      } else if (state is MovieLoadedState) {
+      if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
         return MoviePageView(state.movies.sublist(0, 5));
       } else if (state is MovieErrorState) {
         return Center(
@@ -28,6 +24,8 @@ class UpcomingMoviesWidget extends StatelessWidget {
           ),
         );
       }
+
+      return Center(child: const CircularProgressIndicator());
     });
   }
 }
