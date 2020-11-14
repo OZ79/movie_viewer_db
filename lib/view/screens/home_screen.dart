@@ -24,18 +24,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      SizedBox(height: 300, child: UpcomingMoviesWidget()),
-      SizedBox(
-        height: 40,
-      ),
-      BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
-        if (state is MovieLoadedState &&
-            state.movieType == MovieType.upcoming) {
-          return PreviewMovieList(state.movies);
-        }
-        return Center(child: const CircularProgressIndicator());
-      }),
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        SizedBox(height: 300, child: UpcomingMoviesWidget()),
+        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.upcoming) {
+            return Container(
+                height: 220, child: PreviewMovieList(state.movies));
+          }
+          return Center(child: const CircularProgressIndicator());
+        }),
+        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.upcoming) {
+            return Container(
+                height: 220, child: PreviewMovieList(state.movies));
+          }
+          return Center(child: const CircularProgressIndicator());
+        }),
+        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.upcoming) {
+            return Container(
+                height: 220, child: PreviewMovieList(state.movies));
+          }
+          return Center(child: const CircularProgressIndicator());
+        }),
+      ]),
+    );
   }
 }

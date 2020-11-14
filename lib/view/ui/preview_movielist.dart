@@ -12,21 +12,29 @@ class PreviewMovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 138,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.only(left: 8, right: 8),
-        itemCount: data.length,
-        separatorBuilder: (BuildContext context, int index) => SizedBox(
-          width: 8,
-        ),
-        itemBuilder: (context, index) {
-          final movie = data[index];
-          final imageUrl = "$IMAGE_URL_92${movie.poster}";
-          return MovieIem(title: movie.title, imageUrl: imageUrl);
-        },
-      ),
+    return Column(
+      children: [
+        Align(
+            alignment: const Alignment(-0.95, 0.0),
+            child: Text(
+              "UPCAMING",
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.black54),
+            )),
+        Expanded(
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final movie = data[index];
+              final imageUrl = "$IMAGE_URL_92${movie.poster}";
+              return MovieIem(title: movie.title, imageUrl: imageUrl);
+            },
+          ),
+        )
+      ],
     );
   }
 }
@@ -39,12 +47,36 @@ class MovieIem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(bottomRight: Radius.circular(18)),
-      child: Container(
-          color: Colors.yellow,
-          child: Image(
-              fit: BoxFit.cover, image: CachedNetworkImageProvider(imageUrl))),
+    final imageHeight = 140.0;
+    return Container(
+      margin: const EdgeInsets.all(8),
+      child: Column(children: [
+        Container(
+          height: imageHeight,
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(bottomRight: Radius.circular(18)),
+            child: Container(
+                color: Colors.yellow,
+                child: Image(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(imageUrl))),
+          ),
+        ),
+        Container(
+          //color: Colors.yellow,
+          width: imageHeight * 0.66,
+          child: Text(
+            title,
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Colors.black54),
+          ),
+        ),
+      ]),
     );
   }
 }
