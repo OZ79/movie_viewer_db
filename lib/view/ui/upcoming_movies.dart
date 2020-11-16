@@ -145,7 +145,7 @@ class _MovieItemState extends State<MovieItem> {
             imageBuilder: (context, imageProvider) {
               return Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(17),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
                       offset: const Offset(3, 4),
