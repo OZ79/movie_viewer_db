@@ -12,7 +12,12 @@ import '../../config.dart';
 class UpcomingMoviesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+    return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+      if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
+        return true;
+      }
+      return false;
+    }, builder: (context, state) {
       if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
         return MoviePageView(state.movies.sublist(0, 5));
       } else if (state is MovieErrorState) {

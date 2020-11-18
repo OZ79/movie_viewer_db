@@ -18,8 +18,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    loadData();
+  }
+
+  void loadData() async {
+    BlocProvider.of<MovieBloc>(context)
+      ..add(FetchMovieEvent(movieType: MovieType.popular));
+
+    BlocProvider.of<MovieBloc>(context)
+      ..add(FetchMovieEvent(movieType: MovieType.now_playing));
+
     BlocProvider.of<MovieBloc>(context)
       ..add(FetchMovieEvent(movieType: MovieType.upcoming));
+
+    BlocProvider.of<MovieBloc>(context)
+      ..add(FetchMovieEvent(movieType: MovieType.top_rated));
   }
 
   @override
@@ -27,27 +40,65 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: Column(children: [
         SizedBox(height: 300, child: UpcomingMoviesWidget()),
-        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+        SizedBox(height: 20),
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
-              state.movieType == MovieType.upcoming) {
+              state.movieType == MovieType.popular) {
+            return true;
+          }
+          return false;
+        }, builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.popular) {
             return Container(
-                height: 220, child: PreviewMovieList(state.movies));
+                height: 200, child: PreviewMovieList("POPULAR", state.movies));
           }
           return Center(child: const CircularProgressIndicator());
         }),
-        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+        SizedBox(height: 20),
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
-              state.movieType == MovieType.upcoming) {
+              state.movieType == MovieType.now_playing) {
+            return true;
+          }
+          return false;
+        }, builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.now_playing) {
             return Container(
-                height: 220, child: PreviewMovieList(state.movies));
+                height: 200,
+                child: PreviewMovieList("NOW PLAYING", state.movies));
           }
           return Center(child: const CircularProgressIndicator());
         }),
-        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+        SizedBox(height: 20),
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.upcoming) {
+            return true;
+          }
+          return false;
+        }, builder: (context, state) {
           if (state is MovieLoadedState &&
               state.movieType == MovieType.upcoming) {
             return Container(
-                height: 220, child: PreviewMovieList(state.movies));
+                height: 200, child: PreviewMovieList("UPCAMING", state.movies));
+          }
+          return Center(child: const CircularProgressIndicator());
+        }),
+        SizedBox(height: 20),
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.top_rated) {
+            return true;
+          }
+          return false;
+        }, builder: (context, state) {
+          if (state is MovieLoadedState &&
+              state.movieType == MovieType.top_rated) {
+            return Container(
+                height: 200,
+                child: PreviewMovieList("TOP RATED", state.movies));
           }
           return Center(child: const CircularProgressIndicator());
         }),
