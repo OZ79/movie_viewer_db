@@ -31,6 +31,7 @@ dependencies:
   http: ^0.12.2
   equatable: ^1.2.5
   cached_network_image: ^2.3.3
+  flutter_custom_clippers: ^1.1.2
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/preview_movielist.dart';
 import 'package:movie_viewer_db/view/ui/upcoming_movies.dart';
 
@@ -39,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(children: [
-        SizedBox(height: 300, child: UpcomingMoviesWidget()),
+        Stack(children: <Widget>[
+          const HeaderBg(),
+          SizedBox(height: 300, child: UpcomingMoviesWidget())
+        ]),
         SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&

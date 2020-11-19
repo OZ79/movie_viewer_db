@@ -17,7 +17,7 @@ class PreviewMovieList extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 8, right: 8),
+          padding: const EdgeInsets.only(left: 8, right: 8),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
@@ -31,7 +31,7 @@ class PreviewMovieList extends StatelessWidget {
               onTap: () {
                 print('Clicked');
               },
-              child: Text(
+              child: const Text(
                 "More ...",
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,

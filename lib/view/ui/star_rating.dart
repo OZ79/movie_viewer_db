@@ -8,7 +8,7 @@ class StarRating extends StatelessWidget {
   final double size;
   final MainAxisAlignment mainAxisAlignment;
 
-  StarRating({
+  const StarRating({
     this.starCount = 5,
     this.rating = .0,
     this.color,
