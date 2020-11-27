@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/util/flutter_device_type.dart';
 import 'package:movie_viewer_db/view/ui/page_view_indicator.dart';
 
 import '../../config.dart';
@@ -19,7 +22,9 @@ class UpcomingMoviesWidget extends StatelessWidget {
       return false;
     }, builder: (context, state) {
       if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
-        return MoviePageView(state.movies.sublist(0, 5));
+        final random = Random();
+        final startIndex = random.nextInt(state.movies.length - 6);
+        return MoviePageView(state.movies.sublist(startIndex, startIndex + 5));
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(
@@ -51,7 +56,8 @@ class _MoviePageViewState extends State<MoviePageView> {
   void initState() {
     super.initState();
 
-    _pageController = PageController(viewportFraction: 0.91);
+    _pageController =
+        PageController(viewportFraction: Device.get().isPhone ? 0.91 : 0.75);
   }
 
   @override
@@ -63,11 +69,11 @@ class _MoviePageViewState extends State<MoviePageView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: Device.get().isPhone ? 300 : 320,
       child: Stack(
         children: <Widget>[
           SizedBox(
-              height: 270,
+              height: Device.get().isPhone ? 270 : 290,
               child: PageView.builder(
                   controller: _pageController,
                   itemCount: widget.data.length,
@@ -113,7 +119,9 @@ class _MovieItemState extends State<MovieItem> {
   void initState() {
     super.initState();
 
-    widget.controller.addListener(_handleChange);
+    if (Device.get().isPhone) {
+      widget.controller.addListener(_handleChange);
+    }
   }
 
   @override
@@ -149,6 +157,9 @@ class _MovieItemState extends State<MovieItem> {
             imageUrl: widget.imageUrl,
             imageBuilder: (context, imageProvider) {
               return Container(
+                width: MediaQuery.of(context).size.shortestSide < 600
+                    ? double.infinity
+                    : 500,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
@@ -160,7 +171,7 @@ class _MovieItemState extends State<MovieItem> {
                   ],
                   image: DecorationImage(
                     alignment: _alignment,
-                    fit: BoxFit.none,
+                    fit: Device.get().isPhone ? BoxFit.none : BoxFit.cover,
                     image: imageProvider,
                   ),
                 ),
@@ -174,7 +185,7 @@ class _MovieItemState extends State<MovieItem> {
         ),
       ),
       SizedBox(
-        width: 300,
+        width: Device.get().isPhone ? 300 : 400,
         child: Text(
           widget.title,
           textAlign: TextAlign.center,
@@ -183,7 +194,7 @@ class _MovieItemState extends State<MovieItem> {
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic,
               fontSize: 17,
-              color: Colors.black54),
+              color: const Color(0xFF1E88E5)),
         ),
       )
     ]);

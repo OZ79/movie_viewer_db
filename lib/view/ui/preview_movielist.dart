@@ -25,7 +25,7 @@ class PreviewMovieList extends StatelessWidget {
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
-                  color: Colors.black54),
+                  color: const Color(0xFF1E88E5)),
             ),
             GestureDetector(
               onTap: () {
@@ -36,7 +36,7 @@ class PreviewMovieList extends StatelessWidget {
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.black54),
+                    color: const Color(0xFF1E88E5)),
               ),
             ),
           ]),
@@ -91,7 +91,7 @@ class MovieIem extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: imageHeight * 0.66,
+              width: imageHeight * 0.667,
               child: Text(
                 title,
                 textAlign: TextAlign.left,
@@ -100,7 +100,7 @@ class MovieIem extends StatelessWidget {
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
-                    color: Colors.black54),
+                    color: const Color(0xFF1E88E5)),
               ),
             ),
             StarRating(

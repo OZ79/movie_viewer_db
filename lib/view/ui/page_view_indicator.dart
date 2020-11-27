@@ -8,21 +8,23 @@ class LineIndiator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
+      const IndicatorTrack(),
       AnimatedBuilder(
           animation: controller,
           builder: (_, child) {
             final double offset =
-                30 * (controller.page ?? controller.initialPage.toDouble());
+                34.5 * (controller.page ?? controller.initialPage.toDouble());
             return Transform.translate(
-              offset: Offset(offset, 0),
+              offset: Offset(
+                  MediaQuery.of(context).size.width * 0.5 - 80 + offset, 0),
               child: child,
             );
           },
           child: Container(
-            alignment: const Alignment(-0.31, 0.88),
-            child: const IndiatorPainter(Colors.black54),
+            width: 22,
+            alignment: const Alignment(0, 0.88),
+            child: const IndiatorPainter(const Color(0xFF1976D2)),
           )),
-      const IndicatorTrack(),
     ]);
   }
 }
@@ -32,14 +34,14 @@ class IndicatorTrack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: const Alignment(0, 0.88),
+    return Center(
       child: Container(
+        alignment: const Alignment(0, 0.88),
         width: 160,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List<Widget>.generate(
-              5, (i) => const IndiatorPainter(Colors.black38)),
+              5, (i) => const IndiatorPainter(Color(0xFF64B5F6))),
         ),
       ),
     );

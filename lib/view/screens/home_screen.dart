@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/util/flutter_device_type.dart';
 import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/preview_movielist.dart';
 import 'package:movie_viewer_db/view/ui/upcoming_movies.dart';
@@ -42,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(children: [
         Stack(children: <Widget>[
           const HeaderBg(),
-          SizedBox(height: 300, child: UpcomingMoviesWidget())
+          SizedBox(
+              height: Device.get().isPhone ? 300 : 320,
+              child: UpcomingMoviesWidget())
         ]),
         SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -57,7 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container(
                 height: 200, child: PreviewMovieList("POPULAR", state.movies));
           }
-          return Center(child: const CircularProgressIndicator());
+          return Container(
+              height: 200,
+              child: Center(child: const CircularProgressIndicator()));
         }),
         SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -73,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 200,
                 child: PreviewMovieList("NOW PLAYING", state.movies));
           }
-          return Center(child: const CircularProgressIndicator());
+          return Container(
+              height: 200,
+              child: Center(child: const CircularProgressIndicator()));
         }),
         SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -88,7 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container(
                 height: 200, child: PreviewMovieList("UPCAMING", state.movies));
           }
-          return Center(child: const CircularProgressIndicator());
+          return Container(
+              height: 200,
+              child: Center(child: const CircularProgressIndicator()));
         }),
         SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -104,7 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 200,
                 child: PreviewMovieList("TOP RATED", state.movies));
           }
-          return Center(child: const CircularProgressIndicator());
+          return Container(
+              height: 200,
+              child: Center(child: const CircularProgressIndicator()));
         }),
       ]),
     );

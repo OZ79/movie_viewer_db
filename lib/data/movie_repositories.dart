@@ -17,11 +17,11 @@ class MovieRepository implements MovieRepositoryApi {
   }
 
   @override
-  Future<List<Movie>> fetchMovies(MovieType movieType) async {
+  Future<List<Movie>> fetchMovies(MovieType movieType, [int page = 1]) async {
     final url = Uri.https(
         MOVIE_DB_BASE_URL,
         '/3/movie/${movieType.toString().split('.').last}',
-        {'api_key': API_KEY, 'language': 'en-US'});
+        {'api_key': API_KEY, 'language': 'en-US', 'page': page.toString()});
 
     final response = await http.get(url);
 

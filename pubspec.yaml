@@ -32,6 +32,7 @@ dependencies:
   equatable: ^1.2.5
   cached_network_image: ^2.3.3
   flutter_custom_clippers: ^1.1.2
+  device_preview: ^0.5.5
 
 dev_dependencies:
   flutter_test:
