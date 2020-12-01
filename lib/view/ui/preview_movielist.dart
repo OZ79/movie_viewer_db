@@ -47,10 +47,9 @@ class PreviewMovieList extends StatelessWidget {
             itemCount: data.length,
             itemBuilder: (context, index) {
               final movie = data[index];
-              final imageUrl = "$IMAGE_URL_92${movie.poster}";
               return MovieIem(
                 title: movie.title,
-                imageUrl: imageUrl,
+                imageUrl: "$IMAGE_URL_92${movie.poster}",
                 rating: movie.rating,
               );
             },
@@ -83,11 +82,9 @@ class MovieIem extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.only(bottomRight: Radius.circular(12)),
-                child: Container(
-                    color: Colors.yellow,
-                    child: Image(
-                        fit: BoxFit.cover,
-                        image: CachedNetworkImageProvider(imageUrl))),
+                child: Image(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(imageUrl)),
               ),
             ),
             SizedBox(

@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     loadData();
   }
 
-  void loadData() async {
+  void loadData() {
     BlocProvider.of<MovieBloc>(context)
       ..add(FetchMovieEvent(movieType: MovieType.popular));
 
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: Device.get().isPhone ? 300 : 320,
               child: UpcomingMoviesWidget())
         ]),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
               state.movieType == MovieType.popular) {
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               child: Center(child: const CircularProgressIndicator()));
         }),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
               state.movieType == MovieType.now_playing) {
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               child: Center(child: const CircularProgressIndicator()));
         }),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
               state.movieType == MovieType.upcoming) {
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               child: Center(child: const CircularProgressIndicator()));
         }),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is MovieLoadedState &&
               state.movieType == MovieType.top_rated) {

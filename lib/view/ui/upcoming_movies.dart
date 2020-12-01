@@ -79,9 +79,8 @@ class _MoviePageViewState extends State<MoviePageView> {
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final movie = widget.data[index];
-                    final imageUrl = "$IMAGE_URL_500${movie.backPoster}";
                     return MovieItem(
-                      imageUrl: imageUrl,
+                      imageUrl: "$IMAGE_URL_500${movie.backPoster}",
                       title: movie.title,
                       index: index,
                       controller: _pageController,

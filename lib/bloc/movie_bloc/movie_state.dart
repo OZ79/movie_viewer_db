@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
+import 'package:movie_viewer_db/data/models/movie_page.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 
 abstract class MovieState extends Equatable {
@@ -19,16 +20,32 @@ class MovieLoadingState extends MovieState {
 }
 
 class MovieLoadedState extends MovieState {
+  final List<Movie> movies;
   final MovieType movieType;
-  final List<Movie> _movies;
 
-  const MovieLoadedState({@required movies, @required this.movieType})
-      : _movies = movies;
-
-  get movies => _movies;
+  const MovieLoadedState({@required this.movies, @required this.movieType});
 
   @override
-  List<Object> get props => [_movies];
+  List<Object> get props => [movies, movieType];
+}
+
+class MoviePagesLoadedState extends MovieState {
+  final List<Movie> movies;
+  final int pages;
+  final int totalPages;
+  final MovieType movieType;
+
+  const MoviePagesLoadedState({
+    @required this.movies,
+    @required this.pages,
+    @required this.totalPages,
+    @required this.movieType,
+  });
+
+  bool get hasReachedMax => pages == totalPages;
+
+  @override
+  List<Object> get props => [movies, pages, totalPages, movieType];
 }
 
 class MovieErrorState extends MovieState {
