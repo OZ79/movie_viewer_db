@@ -17,14 +17,21 @@ class MovieListScreen extends StatefulWidget {
 }
 
 class _MovieListScreenState extends State<MovieListScreen> {
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
 
-    loadPage(1);
+    loadPage();
   }
 
-  void loadPage(int page) {
+  void loadPage([int page = 1]) {
+    if (_isLoading) {
+      return;
+    }
+
+    _isLoading = true;
     BlocProvider.of<MovieBloc>(context)
       ..add(FetchMoviePageEvent(movieType: MovieType.upcoming, page: page));
   }
@@ -33,6 +40,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
       if (state is MoviePagesLoadedState) {
+        _isLoading = false;
         print("LOADED:");
         print("pages:${state.pages}");
         print("totalPages:${state.totalPages}");
@@ -42,7 +50,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 : state.movies.length + 1,
             itemBuilder: (BuildContext context, int index) {
               if (index >= state.movies.length) {
-                print("LOAD");
                 loadPage(state.pages + 1);
                 return Center(child: const CircularProgressIndicator());
               } else {
