@@ -43,6 +43,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
             totalPages: moviePage.totalPages,
             movieType: event.movieType);
       } catch (e) {
+        print(e.toString());
         yield MovieErrorState(message: e.toString());
       }
     }

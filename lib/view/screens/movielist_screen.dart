@@ -33,7 +33,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
     _isLoading = true;
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMoviePageEvent(movieType: MovieType.upcoming, page: page));
+      ..add(FetchMoviePageEvent(movieType: MovieType.top_rated, page: page));
   }
 
   @override
@@ -41,9 +41,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
     return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
       if (state is MoviePagesLoadedState) {
         _isLoading = false;
-        print("LOADED:");
-        print("pages:${state.pages}");
-        print("totalPages:${state.totalPages}");
         return ListView.builder(
             itemCount: state.hasReachedMax
                 ? state.movies.length
@@ -85,6 +82,17 @@ class MovieIem extends StatelessWidget {
     final imageHeight = 138.0;
     return Container(
       margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(1, 1),
+            blurRadius: 1,
+            color: Colors.black12,
+          )
+        ],
+      ),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +116,7 @@ class MovieIem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 290,
+                      width: MediaQuery.of(context).size.width - 120,
                       child: Text(
                         title,
                         textAlign: TextAlign.left,
@@ -121,7 +129,7 @@ class MovieIem extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 300,
+                      width: MediaQuery.of(context).size.width - 120,
                       child: Text(
                         overview,
                         textAlign: TextAlign.justify,

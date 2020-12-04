@@ -45,11 +45,15 @@ class MovieRepository implements MovieRepositoryApi {
         '/3/movie/${movieType.toString().split('.').last}',
         {'api_key': API_KEY, 'language': 'en-US', 'page': page.toString()});
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      return compute(_parseMoviePages, response.body);
-    } else {
-      throw Exception();
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return compute(_parseMoviePages, response.body);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }
