@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../config.dart';
 import './models/movie.dart';
+import 'models/movie_detail.dart';
 import 'models/movie_page.dart';
 
 enum MovieType { upcoming, latest, now_playing, popular, top_rated }
@@ -10,6 +11,7 @@ enum MovieType { upcoming, latest, now_playing, popular, top_rated }
 abstract class MovieRepositoryApi {
   Future<List<Movie>> fetchMovies(MovieType movieType);
   Future<MoviePage> fetchMoviePage(MovieType movieType, int page);
+  Future<MovieDetail> fetchMovieDetail(int movieId);
 }
 
 class MovieRepository implements MovieRepositoryApi {
@@ -21,6 +23,11 @@ class MovieRepository implements MovieRepositoryApi {
   static MoviePage _parseMoviePages(String responseBody) {
     final parsed = jsonDecode(responseBody);
     return MoviePage.fromJson(parsed);
+  }
+
+  static MovieDetail _parseMovieDetail(String responseBody) {
+    final parsed = jsonDecode(responseBody);
+    return MovieDetail.fromJson(parsed);
   }
 
   @override
@@ -49,6 +56,25 @@ class MovieRepository implements MovieRepositoryApi {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         return compute(_parseMoviePages, response.body);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<MovieDetail> fetchMovieDetail(int movieId) async {
+    final url = Uri.https(MOVIE_DB_BASE_URL, 'movie/$movieId', {
+      'api_key': API_KEY,
+      'language': 'en-US',
+      'append_to_response': 'credits'
+    });
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return compute(_parseMovieDetail, response.body);
       } else {
         throw Exception();
       }

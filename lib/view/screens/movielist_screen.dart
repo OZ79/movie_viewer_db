@@ -52,6 +52,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               } else {
                 final movie = state.movies[index];
                 return MovieIem(
+                  movieId: movie.id,
                   title: movie.title,
                   overview: movie.overview,
                   imageUrl: "$IMAGE_URL_92${movie.poster}",
@@ -66,13 +67,15 @@ class _MovieListScreenState extends State<MovieListScreen> {
 }
 
 class MovieIem extends StatelessWidget {
+  final int movieId;
   final String title;
   final String overview;
   final String imageUrl;
   final double rating;
 
   const MovieIem(
-      {@required this.title,
+      {@required this.movieId,
+      @required this.title,
       @required this.overview,
       @required this.imageUrl,
       @required this.rating});
@@ -80,78 +83,83 @@ class MovieIem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageHeight = 138.0;
-    return Container(
-      margin: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(1, 1),
-            blurRadius: 1,
-            color: Colors.black12,
-          )
-        ],
-      ),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-                width: 92,
-                height: imageHeight,
-                child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.only(bottomRight: Radius.circular(12)),
-                    child: !imageUrl.contains("null")
-                        ? Image(
-                            fit: BoxFit.cover, image: NetworkImage(imageUrl))
-                        : const Icon(Icons.movie))),
-            const SizedBox(width: 8),
-            Container(
-              //color: Colors.yellow,
-              height: imageHeight,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 120,
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: const Color(0xFF1E88E5)),
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 120,
-                      child: Text(
-                        overview,
-                        textAlign: TextAlign.justify,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        maxLines: 4,
-                        style: const TextStyle(
-                            //fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: const Color(0xFF1E88E5)),
-                      ),
-                    ),
-                    StarRating(
-                      rating: rating * 0.5,
-                      size: 14,
-                      color: Colors.yellow[700],
-                      borderColor: Colors.yellow[700],
-                      mainAxisAlignment: MainAxisAlignment.start,
-                    )
-                  ]),
+    return GestureDetector(
+      onTap: () {
+        print(movieId);
+      },
+      child: Container(
+        margin: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(1, 1),
+              blurRadius: 1,
+              color: Colors.black12,
             )
-          ]),
+          ],
+        ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                  width: 92,
+                  height: imageHeight,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(15),
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5)),
+                      child: !imageUrl.contains("null")
+                          ? Image(
+                              fit: BoxFit.cover, image: NetworkImage(imageUrl))
+                          : const Icon(Icons.movie))),
+              const SizedBox(width: 8),
+              Container(
+                //color: Colors.yellow,
+                height: imageHeight,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: const Color(0xFF1E88E5)),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Text(
+                          overview,
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          maxLines: 4,
+                          style: const TextStyle(
+                              fontSize: 16, color: const Color(0xFF1E88E5)),
+                        ),
+                      ),
+                      StarRating(
+                        rating: rating * 0.5,
+                        size: 14,
+                        color: Colors.yellow[700],
+                        borderColor: Colors.yellow[700],
+                        mainAxisAlignment: MainAxisAlignment.start,
+                      )
+                    ]),
+              )
+            ]),
+      ),
     );
   }
 }
