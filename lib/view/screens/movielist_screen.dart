@@ -54,6 +54,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 return MovieIem(
                   movieId: movie.id,
                   title: movie.title,
+                  releaseDate: movie.releaseDate,
                   overview: movie.overview,
                   imageUrl: "$IMAGE_URL_92${movie.poster}",
                   rating: movie.rating,
@@ -69,6 +70,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
 class MovieIem extends StatelessWidget {
   final int movieId;
   final String title;
+  final String releaseDate;
   final String overview;
   final String imageUrl;
   final double rating;
@@ -76,6 +78,7 @@ class MovieIem extends StatelessWidget {
   const MovieIem(
       {@required this.movieId,
       @required this.title,
+      @required this.releaseDate,
       @required this.overview,
       @required this.imageUrl,
       @required this.rating});
@@ -137,6 +140,12 @@ class MovieIem extends StatelessWidget {
                               color: const Color(0xFF1E88E5)),
                         ),
                       ),
+                      Text(
+                        releaseDate,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontSize: 14, color: const Color(0xFF1E88E5)),
+                      ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 120,
                         child: Text(
@@ -144,7 +153,7 @@ class MovieIem extends StatelessWidget {
                           textAlign: TextAlign.justify,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
-                          maxLines: 4,
+                          maxLines: 3,
                           style: const TextStyle(
                               fontSize: 16, color: const Color(0xFF1E88E5)),
                         ),
