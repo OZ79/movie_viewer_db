@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
@@ -39,12 +40,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
-      if (state is MoviePagesLoadedState) {
-        _isLoading = false;
-        return Column(children: [
-          const HeaderBg(),
-          Expanded(
+    return Column(children: [
+      const SizedBox(height: 10),
+      ButtonAppBar(), //const HeaderBg(),
+      const SizedBox(height: 5),
+      BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+        if (state is MoviePagesLoadedState) {
+          _isLoading = false;
+          return Expanded(
             child: ListView.builder(
                 itemCount: state.hasReachedMax
                     ? state.movies.length
@@ -65,11 +68,12 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     );
                   }
                 }),
-          )
-        ]);
-      }
-      return Center(child: const CircularProgressIndicator());
-    });
+          );
+        }
+        return Expanded(
+            child: Center(child: const CircularProgressIndicator()));
+      }),
+    ]);
   }
 }
 
@@ -100,14 +104,11 @@ class MovieIem extends StatelessWidget {
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white,
+          border: Border.all(
+            color: Colors.black12,
+            width: 1,
+          ),
           borderRadius: BorderRadius.circular(6),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(1, 1),
-              blurRadius: 1,
-              color: Colors.black12,
-            )
-          ],
         ),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
