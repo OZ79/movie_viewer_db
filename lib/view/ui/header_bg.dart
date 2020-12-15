@@ -31,13 +31,13 @@ class _HeaderBgState extends State<HeaderBg> {
         ClipPath(
             clipper: WaveClipperOne(),
             child: Container(
-              height: 160,
+              height: 100,
               color: const Color(0x7e4ce3).withOpacity(0.6),
             )),
         ClipPath(
             clipper: WaveClipperTwo(),
             child: Container(
-              height: 160,
+              height: 100,
               color: const Color(0x7e4ce3).withOpacity(0.6),
             ))
       ]),

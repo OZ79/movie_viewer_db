@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
 import '../../config.dart';
@@ -41,26 +42,31 @@ class _MovieListScreenState extends State<MovieListScreen> {
     return BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
       if (state is MoviePagesLoadedState) {
         _isLoading = false;
-        return ListView.builder(
-            itemCount: state.hasReachedMax
-                ? state.movies.length
-                : state.movies.length + 1,
-            itemBuilder: (BuildContext context, int index) {
-              if (index >= state.movies.length) {
-                loadPage(state.pages + 1);
-                return Center(child: const CircularProgressIndicator());
-              } else {
-                final movie = state.movies[index];
-                return MovieIem(
-                  movieId: movie.id,
-                  title: movie.title,
-                  releaseDate: movie.releaseDate,
-                  overview: movie.overview,
-                  imageUrl: "$IMAGE_URL_92${movie.poster}",
-                  rating: movie.rating,
-                );
-              }
-            });
+        return Column(children: [
+          const HeaderBg(),
+          Expanded(
+            child: ListView.builder(
+                itemCount: state.hasReachedMax
+                    ? state.movies.length
+                    : state.movies.length + 1,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index >= state.movies.length) {
+                    loadPage(state.pages + 1);
+                    return Center(child: const CircularProgressIndicator());
+                  } else {
+                    final movie = state.movies[index];
+                    return MovieIem(
+                      movieId: movie.id,
+                      title: movie.title,
+                      releaseDate: movie.releaseDate,
+                      overview: movie.overview,
+                      imageUrl: "$IMAGE_URL_92${movie.poster}",
+                      rating: movie.rating,
+                    );
+                  }
+                }),
+          )
+        ]);
       }
       return Center(child: const CircularProgressIndicator());
     });
