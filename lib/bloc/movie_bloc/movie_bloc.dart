@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,15 +30,20 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     if (event is FetchMoviePageEvent) {
       try {
+        if (event.page == 1) {
+          yield MovieLoadingState();
+        }
+
         MoviePage moviePage =
             await movieRepository.fetchMoviePage(event.movieType, event.page);
         List<Movie> movies;
-        if (state is MoviePagesLoadedState) {
+        if (state is MoviePagesLoadedState && event.page > 1) {
           movies = (state as MoviePagesLoadedState).movies;
           movies.addAll(moviePage.movies);
-        } else {
+        } else if (event.page == 1) {
           movies = moviePage.movies;
         }
+
         yield MoviePagesLoadedState(
             movies: movies,
             pages: moviePage.page,
@@ -60,4 +66,22 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       }
     }
   }
+
+  /*@override
+  Stream<Transition<MovieEvent, MovieState>> transformEvents(
+      Stream<MovieEvent> events, transitionFn) {
+    return events.switchMap(transitionFn);
+
+    /*final nonDebounceStream = events.where((event) {
+      return (event is! FetchMoviePageEvent ||
+          (event is FetchMoviePageEvent && event.page != 1));
+    });
+
+    final debounceStream = events.where((event) {
+      return (event is FetchMoviePageEvent && event.page == 1);
+    }).debounceTime(Duration(milliseconds: 300));
+
+    return nonDebounceStream
+        .mergeWith([debounceStream]).switchMap(transitionFn);*/
+  }*/
 }
