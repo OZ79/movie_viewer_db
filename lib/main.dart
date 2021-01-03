@@ -53,7 +53,7 @@ class App extends StatelessWidget {
           child: Scaffold(
             //backgroundColor: const Color(0xff182454),
             body: SafeArea(
-              child: MovieListScreen(), // HomeScreen(),
+              child: MovieListScreen(), // HomeScreen()
             ),
           ),
         ),

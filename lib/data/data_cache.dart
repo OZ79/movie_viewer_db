@@ -1,3 +1,4 @@
+import 'models/movie.dart';
 import 'models/movie_page.dart';
 import 'movie_repositories.dart';
 
@@ -6,6 +7,16 @@ class DataCache {
 
   static MoviePage getMoviePage(MovieType movieType, int page) {
     return _moviePages[movieType][page - 1];
+  }
+
+  static MoviePage geLastMoviePage(MovieType movieType) {
+    return _moviePages[movieType].last;
+  }
+
+  static List<Movie> getMovies(MovieType movieType) {
+    return _moviePages[movieType]
+        .expand((moviePage) => moviePage.movies)
+        .toList();
   }
 
   static bool containsMoviePage(MovieType movieType, int page) {

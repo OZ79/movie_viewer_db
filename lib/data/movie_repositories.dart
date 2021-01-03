@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../config.dart';
 import './models/movie.dart';
-import 'data_cache.dart';
 import 'models/movie_detail.dart';
 import 'models/movie_page.dart';
 
@@ -48,11 +47,6 @@ class MovieRepository implements MovieRepositoryApi {
 
   @override
   Future<MoviePage> fetchMoviePage(MovieType movieType, int page) async {
-    if (DataCache.containsMoviePage(movieType, page)) {
-      await Future.delayed(const Duration(milliseconds: 200));
-      return DataCache.getMoviePage(movieType, page);
-    }
-
     final url = Uri.https(
         MOVIE_DB_BASE_URL,
         '/3/movie/${movieType.toString().split('.').last}',
@@ -61,10 +55,7 @@ class MovieRepository implements MovieRepositoryApi {
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        final moviePage = compute(_parseMoviePages, response.body);
-        moviePage
-            .then((moviePage) => DataCache.addMoviePage(movieType, moviePage));
-        return moviePage;
+        return compute(_parseMoviePages, response.body);
       } else {
         throw Exception();
       }

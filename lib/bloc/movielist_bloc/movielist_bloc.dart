@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:movie_viewer_db/data/data_cache.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:bloc/bloc.dart';
@@ -21,18 +22,27 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
   Stream<MovieState> mapEventToState(MovieEvent event) async* {
     if (event is FetchMovieListPageEvent) {
       try {
-        if (event.page == 1) {
-          yield MovieLoadingState();
-        }
-
-        MoviePage moviePage =
-            await movieRepository.fetchMoviePage(event.movieType, event.page);
+        MoviePage moviePage;
         List<Movie> movies;
-        if (state is MovieListPagesLoadedState && event.page > 1) {
+
+        if (event.page == 1) {
+          if (DataCache.containsMoviePage(event.movieType, event.page)) {
+            moviePage = DataCache.geLastMoviePage(event.movieType);
+            movies = DataCache.getMovies(event.movieType);
+          } else {
+            yield MovieLoadingState();
+
+            moviePage = await movieRepository.fetchMoviePage(
+                event.movieType, event.page);
+            movies = moviePage.movies;
+            DataCache.addMoviePage(event.movieType, moviePage);
+          }
+        } else {
+          moviePage =
+              await movieRepository.fetchMoviePage(event.movieType, event.page);
           movies = List.from((state as MovieListPagesLoadedState).movies);
           movies.addAll(moviePage.movies);
-        } else if (event.page == 1) {
-          movies = moviePage.movies;
+          DataCache.addMoviePage(event.movieType, moviePage);
         }
 
         yield MovieListPagesLoadedState(

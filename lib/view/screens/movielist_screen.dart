@@ -31,10 +31,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
   void initState() {
     super.initState();
 
-    loadPage();
+    _loadPage();
   }
 
-  void loadPage([int page = 1]) {
+  void _loadPage([int page = 1]) {
     if (_isLoading) {
       return;
     }
@@ -44,35 +44,39 @@ class _MovieListScreenState extends State<MovieListScreen> {
       ..add(FetchMovieListPageEvent(movieType: _curentMovieType, page: page));
   }
 
-  void onItemSelected(int index) {
-    _scrollPosition[_curentMovieType] = _scrollController.position.pixels;
+  void _onItemSelected(int index) {
+    if (_scrollController.hasClients) {
+      _scrollPosition[_curentMovieType] = _scrollController.position.pixels;
+    }
 
     _curentMovieType = mapIndexToMovieType(index);
     _isLoading = false;
     _isItemSelected = true;
 
-    loadPage();
+    _loadPage();
+  }
+
+  void _jumpTo() {
+    if (_scrollController.hasClients && _isItemSelected) {
+      _isItemSelected = false;
+      _scrollController.jumpTo(_scrollPosition[_curentMovieType] ?? 0.0);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       const SizedBox(height: 15),
-      ButtonAppBar(onItemSelected),
+      ButtonAppBar(_onItemSelected),
       const SizedBox(height: 15),
       BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
-        /*Timer(
-            const Duration(milliseconds: 500),
-            () => {
-                  if (_scrollController.hasClients && _isItemSelected)
-                    {
-                      _isItemSelected = false,
-                      _scrollController
-                          .jumpTo(_scrollPosition[_curentMovieType] ?? 0.0)
-                    }
-                });*/
-
         if (state is MovieListPagesLoadedState) {
+          if (_scrollController.hasClients) {
+            _jumpTo();
+          } else {
+            Timer.run(() => _jumpTo());
+          }
+
           _isLoading = false;
           return Expanded(
             child: ListView.builder(
@@ -83,7 +87,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     : state.movies.length + 1,
                 itemBuilder: (BuildContext context, int index) {
                   if (index >= state.movies.length) {
-                    loadPage(state.pages + 1);
+                    _loadPage(state.pages + 1);
                     return Center(child: const CircularProgressIndicator());
                   } else {
                     final movie = state.movies[index];
