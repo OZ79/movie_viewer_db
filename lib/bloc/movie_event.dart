@@ -18,16 +18,6 @@ class FetchMovieEvent extends MovieEvent {
   List<Object> get props => [movieType];
 }
 
-class FetchMoviePageEvent extends MovieEvent {
-  final MovieType movieType;
-  final int page;
-
-  const FetchMoviePageEvent({@required this.movieType, @required this.page});
-
-  @override
-  List<Object> get props => [movieType, page];
-}
-
 class FetchMovieDetailEvent extends MovieEvent {
   final int movieId;
 

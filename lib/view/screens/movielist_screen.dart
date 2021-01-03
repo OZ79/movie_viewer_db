@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
+import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
+import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
-import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
 import '../../config.dart';
@@ -19,8 +21,11 @@ class MovieListScreen extends StatefulWidget {
 }
 
 class _MovieListScreenState extends State<MovieListScreen> {
+  ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
+  bool _isItemSelected = false;
   MovieType _curentMovieType = MovieType.popular;
+  Map<MovieType, double> _scrollPosition = {};
 
   @override
   void initState() {
@@ -35,13 +40,17 @@ class _MovieListScreenState extends State<MovieListScreen> {
     }
 
     _isLoading = true;
-    BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMoviePageEvent(movieType: _curentMovieType, page: page));
+    BlocProvider.of<MovieListBloc>(context)
+      ..add(FetchMovieListPageEvent(movieType: _curentMovieType, page: page));
   }
 
   void onItemSelected(int index) {
+    _scrollPosition[_curentMovieType] = _scrollController.position.pixels;
+
     _curentMovieType = mapIndexToMovieType(index);
     _isLoading = false;
+    _isItemSelected = true;
+
     loadPage();
   }
 
@@ -51,11 +60,23 @@ class _MovieListScreenState extends State<MovieListScreen> {
       const SizedBox(height: 15),
       ButtonAppBar(onItemSelected),
       const SizedBox(height: 15),
-      BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
-        if (state is MoviePagesLoadedState) {
+      BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
+        /*Timer(
+            const Duration(milliseconds: 500),
+            () => {
+                  if (_scrollController.hasClients && _isItemSelected)
+                    {
+                      _isItemSelected = false,
+                      _scrollController
+                          .jumpTo(_scrollPosition[_curentMovieType] ?? 0.0)
+                    }
+                });*/
+
+        if (state is MovieListPagesLoadedState) {
           _isLoading = false;
           return Expanded(
             child: ListView.builder(
+                controller: _scrollController,
                 itemExtent: 138,
                 itemCount: state.hasReachedMax
                     ? state.movies.length
@@ -68,11 +89,11 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     final movie = state.movies[index];
                     return MovieIem(
                       movieId: movie.id,
-                      title: movie.title,
-                      releaseDate: movie.releaseDate,
-                      overview: movie.overview,
+                      title: movie.title ?? 'no info',
+                      releaseDate: movie.releaseDate ?? '',
+                      overview: movie.overview ?? 'no info',
                       imageUrl: "$IMAGE_URL_92${movie.poster}",
-                      rating: movie.rating,
+                      rating: movie.rating ?? 0,
                     );
                   }
                 }),
@@ -82,6 +103,12 @@ class _MovieListScreenState extends State<MovieListScreen> {
             child: Center(child: const CircularProgressIndicator()));
       }),
     ]);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
 
@@ -226,8 +253,8 @@ MovieType mapIndexToMovieType(int index) {
 
 double getFontSize(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
-  print(screenWidth);
-  print(MediaQuery.of(context).size.aspectRatio);
+  //print(screenWidth);
+  //print(MediaQuery.of(context).size.aspectRatio);
 
   //return 16;
 

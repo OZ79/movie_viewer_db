@@ -29,25 +29,6 @@ class MovieLoadedState extends MovieState {
   List<Object> get props => [movies, movieType];
 }
 
-class MoviePagesLoadedState extends MovieState {
-  final List<Movie> movies;
-  final int pages;
-  final int totalPages;
-  final MovieType movieType;
-
-  const MoviePagesLoadedState({
-    @required this.movies,
-    @required this.pages,
-    @required this.totalPages,
-    @required this.movieType,
-  });
-
-  bool get hasReachedMax => pages == totalPages;
-
-  @override
-  List<Object> get props => [movies, pages, totalPages, movieType];
-}
-
 class MovieDetailLoadedState extends MovieState {
   final MovieDetail movieDetail;
 

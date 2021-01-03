@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/preview_movie_bloc/preview_movie_bloc.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
@@ -15,7 +15,7 @@ import '../../config.dart';
 class UpcomingMoviesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+    return BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
       if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
         return true;
       }
@@ -39,6 +39,8 @@ class UpcomingMoviesWidget extends StatelessWidget {
     });
   }
 }
+
+class MovieBloc {}
 
 class MoviePageView extends StatefulWidget {
   final List<Movie> data;
