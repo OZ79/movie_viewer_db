@@ -5,10 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/view/screens/home_screen.dart';
 
+import 'bloc/movie_bloc/movie_bloc.dart';
 import 'bloc/movielist_bloc/movielist_bloc.dart';
-import 'bloc/preview_movie_bloc/preview_movie_bloc.dart';
 import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
+import 'view/screens/movie_detail_screen.dart';
 import 'view/screens/movielist_screen.dart';
 
 void main() {
@@ -34,9 +35,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<PreviewMovieListBloc>(
-          create: (context) =>
-              PreviewMovieListBloc(movieRepository: movieRepository),
+        BlocProvider<MovieBloc>(
+          create: (context) => MovieBloc(movieRepository: movieRepository),
         ),
         BlocProvider<MovieListBloc>(
           create: (context) => MovieListBloc(movieRepository: movieRepository),
@@ -53,7 +53,7 @@ class App extends StatelessWidget {
           child: Scaffold(
             //backgroundColor: const Color(0xff182454),
             body: SafeArea(
-              child: MovieListScreen(), // HomeScreen()
+              child: MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
             ),
           ),
         ),

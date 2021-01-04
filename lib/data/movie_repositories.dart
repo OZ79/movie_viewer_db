@@ -65,7 +65,7 @@ class MovieRepository implements MovieRepositoryApi {
   }
 
   Future<MovieDetail> fetchMovieDetail(int movieId) async {
-    final url = Uri.https(MOVIE_DB_BASE_URL, 'movie/$movieId', {
+    final url = Uri.https(MOVIE_DB_BASE_URL, '3/movie/$movieId', {
       'api_key': API_KEY,
       'language': 'en-US',
       'append_to_response': 'credits'

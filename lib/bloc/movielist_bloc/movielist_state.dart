@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../movie_state.dart';
+import '../base_movie_state.dart';
 
 class MovieListPagesLoadedState extends MovieLoadedState {
   final int pages;

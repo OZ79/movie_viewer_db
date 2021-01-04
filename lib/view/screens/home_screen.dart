@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_state.dart';
-import 'package:movie_viewer_db/bloc/preview_movie_bloc/preview_movie_bloc.dart';
-import 'package:movie_viewer_db/bloc/preview_movie_bloc/preview_movie_event.dart';
-import 'package:movie_viewer_db/bloc/preview_movie_bloc/preview_movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
 import 'package:movie_viewer_db/view/ui/header_bg.dart';
@@ -25,16 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void loadData() {
-    BlocProvider.of<PreviewMovieListBloc>(context)
+    BlocProvider.of<MovieBloc>(context)
       ..add(FetchPreviewMovieEvent(movieType: MovieType.popular));
 
-    BlocProvider.of<PreviewMovieListBloc>(context)
+    BlocProvider.of<MovieBloc>(context)
       ..add(FetchPreviewMovieEvent(movieType: MovieType.now_playing));
 
-    BlocProvider.of<PreviewMovieListBloc>(context)
+    BlocProvider.of<MovieBloc>(context)
       ..add(FetchPreviewMovieEvent(movieType: MovieType.upcoming));
 
-    BlocProvider.of<PreviewMovieListBloc>(context)
+    BlocProvider.of<MovieBloc>(context)
       ..add(FetchPreviewMovieEvent(movieType: MovieType.top_rated));
   }
 
@@ -49,15 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: UpcomingMoviesWidget())
         ]),
         const SizedBox(height: 20),
-        BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.popular) {
             return true;
           }
           return false;
         }, builder: (context, state) {
-          if (state is PreviewMovieLoadedState &&
-              state.movieType == MovieType.popular) {
+          if (state is PreviewMovieLoadedState) {
             return Container(
                 height: 200, child: PreviewMovieList("POPULAR", state.movies));
           }
@@ -66,15 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.now_playing) {
             return true;
           }
           return false;
         }, builder: (context, state) {
-          if (state is PreviewMovieLoadedState &&
-              state.movieType == MovieType.now_playing) {
+          if (state is PreviewMovieLoadedState) {
             return Container(
                 height: 200,
                 child: PreviewMovieList("NOW PLAYING", state.movies));
@@ -84,15 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.upcoming) {
             return true;
           }
           return false;
         }, builder: (context, state) {
-          if (state is PreviewMovieLoadedState &&
-              state.movieType == MovieType.upcoming) {
+          if (state is PreviewMovieLoadedState) {
             return Container(
                 height: 200, child: PreviewMovieList("UPCAMING", state.movies));
           }
@@ -101,15 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.top_rated) {
             return true;
           }
-          return false;
+          return true;
         }, builder: (context, state) {
-          if (state is PreviewMovieLoadedState &&
-              state.movieType == MovieType.top_rated) {
+          if (state is PreviewMovieLoadedState) {
             return Container(
                 height: 200,
                 child: PreviewMovieList("TOP RATED", state.movies));

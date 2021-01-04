@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_state.dart';
-import 'package:movie_viewer_db/bloc/preview_movie_bloc/preview_movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
@@ -15,13 +16,15 @@ import '../../config.dart';
 class UpcomingMoviesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PreviewMovieListBloc, MovieState>(buildWhen: (_, state) {
-      if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
+    return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+      if (state is PreviewMovieLoadedState &&
+              state.movieType == MovieType.upcoming ||
+          state is MovieErrorState) {
         return true;
       }
       return false;
     }, builder: (context, state) {
-      if (state is MovieLoadedState && state.movieType == MovieType.upcoming) {
+      if (state is PreviewMovieLoadedState) {
         final random = Random();
         final startIndex = random.nextInt(state.movies.length - 6);
         return MoviePageView(state.movies.sublist(startIndex, startIndex + 5));
@@ -39,8 +42,6 @@ class UpcomingMoviesWidget extends StatelessWidget {
     });
   }
 }
-
-class MovieBloc {}
 
 class MoviePageView extends StatefulWidget {
   final List<Movie> data;

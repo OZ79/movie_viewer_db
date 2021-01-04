@@ -8,8 +8,8 @@ import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/models/movie_page.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 
-import '../movie_event.dart';
-import '../movie_state.dart';
+import '../base_movie_event.dart';
+import '../base_movie_state.dart';
 import 'movielist_event.dart';
 import 'movielist_state.dart';
 
@@ -55,17 +55,6 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
         yield MovieErrorState(message: e.toString());
       }
     }
-
-    /*if (event is FetchMovieDetailEvent) {
-      yield MovieLoadingState();
-      try {
-        MovieDetail movieDetail =
-            await movieRepository.fetchMovieDetail(event.movieId);
-        yield MovieDetailLoadedState(movieDetail: movieDetail);
-      } catch (e) {
-        yield MovieErrorState(message: e.toString());
-      }
-    }*/
   }
 
   @override

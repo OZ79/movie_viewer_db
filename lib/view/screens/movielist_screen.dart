@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';

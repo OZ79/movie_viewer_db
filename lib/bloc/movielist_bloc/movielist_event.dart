@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../movie_event.dart';
+import '../base_movie_event.dart';
 
 class FetchMovieListPageEvent extends FetchMovieEvent {
   final int page;

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
-import 'package:movie_viewer_db/data/models/movie_detail.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 
 abstract class MovieState extends Equatable {
@@ -27,15 +26,6 @@ class MovieLoadedState extends MovieState {
 
   @override
   List<Object> get props => [movies, movieType];
-}
-
-class MovieDetailLoadedState extends MovieState {
-  final MovieDetail movieDetail;
-
-  const MovieDetailLoadedState({@required this.movieDetail});
-
-  @override
-  List<Object> get props => [movieDetail];
 }
 
 class MovieErrorState extends MovieState {
