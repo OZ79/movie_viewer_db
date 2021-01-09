@@ -22,7 +22,7 @@ class LineIndiator extends StatelessWidget {
           },
           child: Container(
             width: 22,
-            alignment: const Alignment(0, 0.88),
+            alignment: const Alignment(0, 0),
             child: const IndiatorPainter(const Color(0xFF1976D2)),
           )),
     ]);
@@ -36,7 +36,7 @@ class IndicatorTrack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        alignment: const Alignment(0, 0.88),
+        alignment: const Alignment(0, 0),
         width: 160,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

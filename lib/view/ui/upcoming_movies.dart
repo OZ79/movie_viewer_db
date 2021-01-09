@@ -73,7 +73,7 @@ class _MoviePageViewState extends State<MoviePageView> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: Device.get().isPhone ? 300 : 320,
-      child: Stack(
+      child: Column(
         children: <Widget>[
           SizedBox(
               height: Device.get().isPhone ? 270 : 290,
@@ -89,8 +89,10 @@ class _MoviePageViewState extends State<MoviePageView> {
                       controller: _pageController,
                     );
                   })),
-          LineIndiator(
-            controller: _pageController,
+          Expanded(
+            child: LineIndiator(
+              controller: _pageController,
+            ),
           ),
         ],
       ),

@@ -51,7 +51,7 @@ class App extends StatelessWidget {
               statusBarColor: Colors.black,
               statusBarIconBrightness: Brightness.light),
           child: Scaffold(
-            //backgroundColor: const Color(0xff182454),
+            backgroundColor: Colors.white,
             body: SafeArea(
               child: MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
             ),
