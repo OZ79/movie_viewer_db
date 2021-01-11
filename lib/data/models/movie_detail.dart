@@ -1,7 +1,7 @@
 class MovieDetail {
   final String backPoster;
   final List<dynamic> genres;
-  final String originalTitle;
+  final String title;
   final String overview;
   final String poster;
   final String releaseDate;
@@ -11,7 +11,7 @@ class MovieDetail {
   MovieDetail({
     this.backPoster,
     this.genres,
-    this.originalTitle,
+    this.title,
     this.overview,
     this.poster,
     this.releaseDate,
@@ -22,7 +22,7 @@ class MovieDetail {
   MovieDetail.fromJson(Map<String, dynamic> json)
       : backPoster = json['backdrop_path'],
         genres = json['genres'],
-        originalTitle = json['original_title'],
+        title = json['title'],
         overview = json['overview'],
         poster = json['poster_path'],
         releaseDate = json['release_date'],

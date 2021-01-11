@@ -4,7 +4,9 @@ import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
-import 'package:movie_viewer_db/data/models/movie_detail.dart';
+import 'package:movie_viewer_db/view/ui/poster.dart';
+import 'package:movie_viewer_db/view/ui/rating.dart';
+import 'package:movie_viewer_db/view/ui/star_rating.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../config.dart';
@@ -24,7 +26,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 531219));
+      ..add(FetchMovieDetailEvent(movieId: 675327));
   }
 
   @override
@@ -40,22 +42,38 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         builder: (context, state) {
           if (state is MovieDetailLoadedState) {
             final movieDetail = state.movieDetail;
-            final backPoster = '$IMAGE_URL_500${movieDetail.backPoster}';
-            final poster = '$IMAGE_URL_154${movieDetail.poster}';
+            final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
+            final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
 
             return Stack(children: [
               Column(children: [
-                !backPoster.contains("null")
+                !backPosterUrl.contains("null")
                     ? FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,
                         width: double.infinity,
                         height: 250,
                         fit: BoxFit.cover,
                         fadeInDuration: const Duration(milliseconds: 200),
-                        image: backPoster)
+                        image: backPosterUrl)
                     : const Icon(Icons.movie),
-                Text(movieDetail.originalTitle,
-                    textAlign: TextAlign.left,
+                Padding(
+                  padding: const EdgeInsets.only(top: 3, bottom: 15),
+                  child: Row(children: [
+                    SizedBox(width: 165),
+                    Column(children: [
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width - 165,
+                          child: Rating(movieDetail.rating)),
+                      Text(movieDetail.releaseDate,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: const Color(0xFF1E88E5),
+                          ))
+                    ])
+                  ]),
+                ),
+                Text(movieDetail.title,
+                    textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
@@ -63,67 +81,39 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       fontSize: 25,
                       color: const Color(0xFF1E88E5),
                     )),
-                Placeholder(fallbackWidth: double.infinity, fallbackHeight: 100)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    movieDetail.overview,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    maxLines: 20,
+                    style:
+                        TextStyle(fontSize: 21, color: const Color(0xFF1E88E5)),
+                  ),
+                ),
               ]),
-              Positioned(
-                top: 250.0 - 85.0,
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 85,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            stops: [
-                          0.05,
-                          0.2,
-                          1
-                        ],
-                            colors: [
-                          Colors.white,
-                          Colors.white.withOpacity(0.9),
-                          Colors.white.withOpacity(0.0)
-                        ]))),
-              ),
               Container(
-                  //color: Colors.yellow.withOpacity(0.2),
                   width: MediaQuery.of(context).size.width,
-                  height: 310,
-                  child: Image.network(
-                    poster,
-                    fit: BoxFit.cover,
-                    frameBuilder: (_, Widget child, int frame,
-                        bool wasSynchronouslyLoaded) {
-                      return AnimatedAlign(
-                        alignment: frame == null || wasSynchronouslyLoaded
-                            ? Alignment(-0.9, 0.0)
-                            : Alignment(-0.9, 1),
-                        duration: const Duration(seconds: 1),
-                        curve: Curves.easeOutQuint,
-                        child: AnimatedOpacity(
-                          opacity:
-                              frame == null || wasSynchronouslyLoaded ? 0 : 1,
-                          duration: const Duration(milliseconds: 200),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.45),
-                                    offset: const Offset(3.0, 2.0), //Offset
-                                    blurRadius: 8.0,
-                                    spreadRadius: 1.0,
-                                  )
-                                ], //BoxShadow
-                              ),
-                              child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  child: SizedBox(
-                                      width: 154, height: 231, child: child))),
-                        ),
-                      );
-                    },
-                  ))
+                  height: 251,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          stops: [
+                        0.01,
+                        0.2,
+                        0.85,
+                        1
+                      ],
+                          colors: [
+                        Colors.white,
+                        Colors.white.withOpacity(0.87),
+                        Colors.white.withOpacity(0.14),
+                        Colors.white.withOpacity(0.0)
+                      ]))),
+              Poster(posterUrl: posterUrl)
             ]);
           }
           return SizedBox(
