@@ -4,9 +4,9 @@ import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/view/ui/genres.dart';
 import 'package:movie_viewer_db/view/ui/poster.dart';
 import 'package:movie_viewer_db/view/ui/rating.dart';
-import 'package:movie_viewer_db/view/ui/star_rating.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../config.dart';
@@ -31,21 +31,21 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BlocBuilder<MovieBloc, MovieState>(
-        buildWhen: (_, state) {
-          if (state is MovieDetailLoadedState) {
-            return true;
-          }
-          return false;
-        },
-        builder: (context, state) {
-          if (state is MovieDetailLoadedState) {
-            final movieDetail = state.movieDetail;
-            final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
-            final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
+    return BlocBuilder<MovieBloc, MovieState>(
+      buildWhen: (_, state) {
+        if (state is MovieDetailLoadedState) {
+          return true;
+        }
+        return false;
+      },
+      builder: (context, state) {
+        if (state is MovieDetailLoadedState) {
+          final movieDetail = state.movieDetail;
+          final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
+          final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
 
-            return Stack(children: [
+          return SingleChildScrollView(
+            child: Stack(children: [
               Column(children: [
                 !backPosterUrl.contains("null")
                     ? FadeInImage.memoryNetwork(
@@ -72,11 +72,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ])
                   ]),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Genres(),
+                ),
                 Text(movieDetail.title,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
+                      fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: const Color(0xFF1E88E5),
@@ -86,11 +91,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   child: Text(
                     movieDetail.overview,
                     textAlign: TextAlign.justify,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    maxLines: 20,
-                    style:
-                        TextStyle(fontSize: 21, color: const Color(0xFF1E88E5)),
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 21,
+                        color: const Color(0xFF1E88E5)),
                   ),
                 ),
               ]),
@@ -114,13 +118,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         Colors.white.withOpacity(0.0)
                       ]))),
               Poster(posterUrl: posterUrl)
-            ]);
-          }
-          return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Center(child: const CircularProgressIndicator()));
-        },
-      ),
+            ]),
+          );
+        }
+        return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Center(child: const CircularProgressIndicator()));
+      },
     );
   }
 }
