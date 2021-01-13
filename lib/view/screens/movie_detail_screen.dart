@@ -26,7 +26,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 675327));
+      ..add(FetchMovieDetailEvent(movieId: 531219)); //675327
   }
 
   @override
@@ -47,15 +47,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           return SingleChildScrollView(
             child: Stack(children: [
               Column(children: [
-                !backPosterUrl.contains("null")
-                    ? FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        width: double.infinity,
-                        height: 250,
-                        fit: BoxFit.cover,
-                        fadeInDuration: const Duration(milliseconds: 200),
-                        image: backPosterUrl)
-                    : const Icon(Icons.movie),
+                HeaderImage(backPosterUrl),
                 Padding(
                   padding: const EdgeInsets.only(top: 3, bottom: 15),
                   child: Row(children: [
@@ -73,8 +65,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ]),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Genres(),
+                  padding: const EdgeInsets.only(top: 10, bottom: 20, right: 6),
+                  child: Genres(movieDetail.genres),
                 ),
                 Text(movieDetail.title,
                     textAlign: TextAlign.center,
@@ -83,7 +75,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 27,
                       color: const Color(0xFF1E88E5),
                     )),
                 Padding(
@@ -98,25 +90,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                 ),
               ]),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 251,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          stops: [
-                        0.01,
-                        0.2,
-                        0.85,
-                        1
-                      ],
-                          colors: [
-                        Colors.white,
-                        Colors.white.withOpacity(0.87),
-                        Colors.white.withOpacity(0.14),
-                        Colors.white.withOpacity(0.0)
-                      ]))),
+              const HeaderGradient(),
               Poster(posterUrl: posterUrl)
             ]),
           );
@@ -126,5 +100,54 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: Center(child: const CircularProgressIndicator()));
       },
     );
+  }
+}
+
+class HeaderImage extends StatelessWidget {
+  final String url;
+
+  const HeaderImage(this.url);
+
+  @override
+  Widget build(BuildContext context) {
+    return !url.contains("null")
+        ? FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.cover,
+            fadeInDuration: const Duration(milliseconds: 200),
+            image: url)
+        : Container(
+            width: double.infinity,
+            height: 250,
+            child: const Icon(Icons.image));
+  }
+}
+
+class HeaderGradient extends StatelessWidget {
+  const HeaderGradient();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 251,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                stops: [
+              0.01,
+              0.2,
+              0.85,
+              1
+            ],
+                colors: [
+              Colors.white,
+              Colors.white.withOpacity(0.87),
+              Colors.white.withOpacity(0.14),
+              Colors.white.withOpacity(0.0)
+            ])));
   }
 }
