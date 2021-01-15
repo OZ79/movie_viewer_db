@@ -200,7 +200,6 @@ class MovieIem extends StatelessWidget {
                           overview,
                           textAlign: TextAlign.justify,
                           overflow: TextOverflow.ellipsis,
-                          softWrap: true,
                           maxLines: screenSize.width > 540 ||
                                   screenSize.aspectRatio > 0.6
                               ? 2
@@ -261,6 +260,11 @@ double getFontSize(BuildContext context) {
   //print(MediaQuery.of(context).size.aspectRatio);
 
   //return 16;
+  //print(MediaQuery.of(context).orientation);
+
+  if (MediaQuery.of(context).size.aspectRatio > 0.9) {
+    return 20;
+  }
 
   if (screenWidth <= 320) {
     return 18;

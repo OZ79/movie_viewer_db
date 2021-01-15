@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
@@ -53,7 +54,8 @@ class App extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Colors.white,
             body: SafeArea(
-              child: MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
+              child:
+                  MovieDetailScreen(), //MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
             ),
           ),
         ),

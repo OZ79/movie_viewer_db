@@ -22,15 +22,23 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     super.initState();
 
     loadData();
+
+    /*String countryCode = 'PL';
+    String flag = countryCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
+        (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));*/
   }
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 531219)); //675327
+      ..add(FetchMovieDetailEvent(movieId: 777670)); //675327 , 531219, 777670
   }
 
   @override
   Widget build(BuildContext context) {
+    String countryCode = 'US';
+    String flag = countryCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
+        (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+
     return BlocBuilder<MovieBloc, MovieState>(
       buildWhen: (_, state) {
         if (state is MovieDetailLoadedState) {
@@ -46,50 +54,73 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
           return SingleChildScrollView(
             child: Stack(children: [
-              Column(children: [
-                HeaderImage(backPosterUrl),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, bottom: 15),
-                  child: Row(children: [
-                    SizedBox(width: 165),
-                    Column(children: [
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width - 165,
-                          child: Rating(movieDetail.rating)),
-                      Text(movieDetail.releaseDate,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height - 80,
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      HeaderImage(backPosterUrl),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3, bottom: 15),
+                        child: Row(children: [
+                          SizedBox(width: 165),
+                          Column(children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width - 165,
+                                child: Rating(movieDetail.rating)),
+                            Text(movieDetail.releaseDate,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: const Color(0xFF1E88E5),
+                                ))
+                          ])
+                        ]),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CircleAvatar(
+                          radius: 17,
+                          child: Text(flag,
+                              style: TextStyle(
+                                  fontSize: 15, fontStyle: FontStyle.italic)),
+                          backgroundColor: Colors.grey.withOpacity(0.11),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 20, right: 6),
+                        child: Genres(movieDetail.genres),
+                      ),
+                      Text(movieDetail.title,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 27,
                             color: const Color(0xFF1E88E5),
-                          ))
-                    ])
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 20, right: 6),
-                  child: Genres(movieDetail.genres),
-                ),
-                Text(movieDetail.title,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 27,
-                      color: const Color(0xFF1E88E5),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    movieDetail.overview,
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: 21,
-                        color: const Color(0xFF1E88E5)),
-                  ),
-                ),
-              ]),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(
+                          movieDetail.overview,
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 21,
+                              color: const Color(0xFF1E88E5)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Placeholder(fallbackHeight: 130),
+                      ),
+                    ]),
+              ),
               const HeaderGradient(),
               Poster(posterUrl: posterUrl)
             ]),
@@ -138,7 +169,7 @@ class HeaderGradient extends StatelessWidget {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 stops: [
-              0.01,
+              0.025,
               0.2,
               0.85,
               1

@@ -86,7 +86,7 @@ packages:
     source: hosted
     version: "0.3.0"
   device_preview:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: device_preview
       url: "https://pub.dartlang.org"

@@ -12,8 +12,8 @@ class Rating extends StatelessWidget {
       StarRating(
         rating: rating * 0.5,
         size: 20,
-        color: Colors.yellow[700],
-        borderColor: Colors.yellow[700],
+        color: Colors.yellow.shade700,
+        borderColor: Colors.yellow.shade700,
       ),
       SizedBox(
         width: 10,

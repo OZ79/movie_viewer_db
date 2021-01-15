@@ -33,12 +33,13 @@ dependencies:
   cached_network_image: ^2.3.3
   flutter_custom_clippers: ^1.1.2
   transparent_image: ^1.0.0
+  device_preview: ^0.5.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  device_preview: ^0.5.5
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
