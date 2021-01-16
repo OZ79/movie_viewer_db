@@ -4,6 +4,8 @@ import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/view/ui/companies.dart';
+import 'package:movie_viewer_db/view/ui/countries.dart';
 import 'package:movie_viewer_db/view/ui/genres.dart';
 import 'package:movie_viewer_db/view/ui/poster.dart';
 import 'package:movie_viewer_db/view/ui/rating.dart';
@@ -22,23 +24,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     super.initState();
 
     loadData();
-
-    /*String countryCode = 'PL';
-    String flag = countryCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
-        (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));*/
   }
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 777670)); //675327 , 531219, 777670
+      ..add(FetchMovieDetailEvent(movieId: 531219));
+    // 675327 , 531219, 777670, 763440, 293863, 615761, 313369, 956, 353081
   }
 
   @override
   Widget build(BuildContext context) {
-    String countryCode = 'US';
-    String flag = countryCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
-        (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
-
     return BlocBuilder<MovieBloc, MovieState>(
       buildWhen: (_, state) {
         if (state is MovieDetailLoadedState) {
@@ -62,10 +57,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      HeaderImage(backPosterUrl),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3, bottom: 15),
-                        child: Row(children: [
+                      Column(children: [
+                        Header(backPosterUrl),
+                        Row(children: [
                           SizedBox(width: 165),
                           Column(children: [
                             SizedBox(
@@ -77,51 +71,69 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                   color: const Color(0xFF1E88E5),
                                 ))
                           ])
-                        ]),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: CircleAvatar(
-                          radius: 17,
-                          child: Text(flag,
-                              style: TextStyle(
-                                  fontSize: 15, fontStyle: FontStyle.italic)),
-                          backgroundColor: Colors.grey.withOpacity(0.11),
+                        ])
+                      ]),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 12, top: 15, bottom: 20),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Countries(movieDetail.prodCountries),
                         ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 12, right: 12),
+                        child: Companies(movieDetail.prodCompanies),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 10, bottom: 20, right: 6),
+                            top: 20, bottom: 20, left: 12, right: 12),
                         child: Genres(movieDetail.genres),
                       ),
-                      Text(movieDetail.title,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27,
-                            color: const Color(0xFF1E88E5),
-                          )),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          movieDetail.overview,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              fontSize: 21,
-                              color: const Color(0xFF1E88E5)),
-                        ),
+                        child: Column(children: [
+                          Text(movieDetail.title,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 27,
+                                color: const Color(0xFF1E88E5),
+                              )),
+                          SizedBox(height: 15),
+                          Text(
+                            movieDetail.overview,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 21,
+                                color: const Color(0xFF1E88E5)),
+                          )
+                        ]),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Placeholder(fallbackHeight: 130),
+                        padding: const EdgeInsets.all(12.0),
+                        child: SizedBox(
+                          height: 138,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemExtent: 92,
+                            itemCount: movieDetail.casts.length,
+                            itemBuilder: (context, index) {
+                              final imageUrl =
+                                  "$IMAGE_URL_92${movieDetail.casts[index].profilePath}";
+                              return !imageUrl.contains('null')
+                                  ? Image.network(imageUrl)
+                                  : null;
+                            },
+                          ),
+                        ),
                       ),
                     ]),
               ),
-              const HeaderGradient(),
               Poster(posterUrl: posterUrl)
             ]),
           );
@@ -131,6 +143,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: Center(child: const CircularProgressIndicator()));
       },
     );
+  }
+}
+
+class Header extends StatelessWidget {
+  final String imageUrl;
+
+  const Header(this.imageUrl);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [HeaderImage(imageUrl), const HeaderGradient()]);
   }
 }
 
@@ -169,7 +192,7 @@ class HeaderGradient extends StatelessWidget {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 stops: [
-              0.025,
+              0.05,
               0.2,
               0.85,
               1
