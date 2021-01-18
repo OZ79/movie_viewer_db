@@ -28,7 +28,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 531219));
+      ..add(FetchMovieDetailEvent(movieId: 675327));
     // 675327 , 531219, 777670, 763440, 293863, 615761, 313369, 956, 353081
   }
 
@@ -114,22 +114,23 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           )
                         ]),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SizedBox(
-                          height: 138,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemExtent: 92,
-                            itemCount: movieDetail.casts.length,
-                            itemBuilder: (context, index) {
-                              final imageUrl =
-                                  "$IMAGE_URL_92${movieDetail.casts[index].profilePath}";
-                              return !imageUrl.contains('null')
-                                  ? Image.network(imageUrl)
-                                  : null;
-                            },
-                          ),
+                      Container(
+                        height: 180,
+                        margin: EdgeInsets.only(top: 5),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemExtent: 108,
+                          itemCount: movieDetail.casts.length,
+                          itemBuilder: (context, index) {
+                            final imageUrl =
+                                "$IMAGE_URL_92${movieDetail.casts[index].profilePath}";
+                            return !imageUrl.contains('null')
+                                ? CastItem(
+                                    imageUrl,
+                                    movieDetail.casts[index].name,
+                                    movieDetail.casts[index].character)
+                                : null;
+                          },
                         ),
                       ),
                     ]),
@@ -203,5 +204,57 @@ class HeaderGradient extends StatelessWidget {
               Colors.white.withOpacity(0.14),
               Colors.white.withOpacity(0.0)
             ])));
+  }
+}
+
+class CastItem extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String character;
+
+  const CastItem(this.imageUrl, this.name, this.character);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1.5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(left: 4, right: 4, bottom: 12),
+      clipBehavior: Clip.hardEdge,
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Image.network(imageUrl, width: 100, height: 100, fit: BoxFit.cover),
+        SizedBox(height: 6),
+        Container(
+          //color: Colors.yellow.shade100,
+          width: 88,
+          child: Text(name,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(
+                height: 1,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1E88E5),
+              )),
+        ),
+        SizedBox(height: 3),
+        Container(
+          //color: Colors.yellow.shade100,
+          width: 88,
+          child: Text(character,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(
+                height: 1,
+                fontSize: 12.5,
+                color: const Color(0xFF1E88E5),
+              )),
+        ),
+      ]),
+    );
   }
 }
