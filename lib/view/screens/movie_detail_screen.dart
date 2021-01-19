@@ -112,12 +112,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             child: WrapLayout(
                                 itemCount: movieDetail.prodCountries.length,
                                 direction: Axis.vertical,
+                                spacing: -3,
                                 itemBuilder: (context, index) {
                                   return buildCountryItem(
                                       movieDetail.prodCountries, index);
-                                })
-                            //Countries(movieDetail.prodCountries),
-                            ),
+                                })),
                       ),
                       Padding(
                           padding: EdgeInsets.only(left: 12, right: 12),
@@ -127,9 +126,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               itemBuilder: (context, index) {
                                 return buildCompanyItem(
                                     movieDetail.prodCompanies, index);
-                              })
-                          //Companies(movieDetail.prodCompanies),
-                          ),
+                              })),
                       Padding(
                           padding: const EdgeInsets.only(
                               top: 20, bottom: 20, left: 12, right: 12),
@@ -139,9 +136,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               itemBuilder: (context, index) {
                                 return buildGenreItem(
                                     movieDetail.genres, index);
-                              })
-                          //Genres(movieDetail.genres),
-                          ),
+                              })),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(children: [

@@ -200,7 +200,7 @@ class MovieIem extends StatelessWidget {
                           overview,
                           textAlign: TextAlign.justify,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: screenSize.width > 540 ||
+                          maxLines: screenSize.width > 411 ||
                                   screenSize.aspectRatio > 0.6
                               ? 2
                               : 3,
