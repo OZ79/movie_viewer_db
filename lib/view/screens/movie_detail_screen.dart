@@ -122,7 +122,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           padding: EdgeInsets.only(left: 12, right: 12),
                           child: WrapLayout(
                               itemCount: movieDetail.prodCompanies.length,
+                              alignment: WrapAlignment.center,
                               spacing: 40,
+                              runSpacing: 5,
                               itemBuilder: (context, index) {
                                 return buildCompanyItem(
                                     movieDetail.prodCompanies, index);
@@ -132,6 +134,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               top: 20, bottom: 20, left: 12, right: 12),
                           child: WrapLayout(
                               itemCount: movieDetail.genres.length,
+                              alignment: WrapAlignment.center,
                               spacing: 15,
                               itemBuilder: (context, index) {
                                 return buildGenreItem(
