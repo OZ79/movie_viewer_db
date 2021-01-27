@@ -12,6 +12,8 @@ import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
 import 'view/screens/movie_detail_screen.dart';
 import 'view/screens/movielist_screen.dart';
+import 'view/screens/search_screen.dart';
+import 'view/ui/bottom_nav_bar.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
@@ -53,9 +55,10 @@ class App extends StatelessWidget {
               statusBarIconBrightness: Brightness.light),
           child: Scaffold(
             backgroundColor: Colors.white,
+            bottomNavigationBar: AppBottomNavigationBar(),
             body: SafeArea(
               child:
-                  MovieDetailScreen(), //MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
+                  SearchScreen(), //SearchScreen(), MovieDetailScreen(), // HomeScreen(), //MovieListScreen(),
             ),
           ),
         ),

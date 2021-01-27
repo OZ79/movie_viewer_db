@@ -86,34 +86,6 @@ class ButtonApp extends StatelessWidget {
   const ButtonApp(
       this.index, this.title, this.width, this.color, this.onSelected);
 
-  double getFontSize(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth <= 320) {
-      return 12.9;
-    }
-    if (screenWidth <= 360) {
-      return 13.3;
-    }
-    if (screenWidth <= 411) {
-      return 13.7;
-    }
-    if (screenWidth <= 480) {
-      return 14;
-    }
-    if (screenWidth <= 540) {
-      return 20;
-    }
-    if (screenWidth <= 768) {
-      return 24;
-    }
-    if (screenWidth <= 800) {
-      return 26;
-    }
-
-    return 27;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -180,4 +152,32 @@ class ButtonSelector extends StatelessWidget {
       ),
     );
   }
+}
+
+double getFontSize(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
+
+  if (screenWidth <= 320) {
+    return 12.9;
+  }
+  if (screenWidth <= 360) {
+    return 13.3;
+  }
+  if (screenWidth <= 411) {
+    return 13.7;
+  }
+  if (screenWidth <= 480) {
+    return 14;
+  }
+  if (screenWidth <= 540) {
+    return 20;
+  }
+  if (screenWidth <= 768) {
+    return 24;
+  }
+  if (screenWidth <= 800) {
+    return 26;
+  }
+
+  return 27;
 }

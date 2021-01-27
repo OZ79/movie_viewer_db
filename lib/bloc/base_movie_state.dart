@@ -22,7 +22,8 @@ class MovieLoadedState extends MovieState {
   final List<Movie> movies;
   final MovieType movieType;
 
-  const MovieLoadedState({@required this.movies, @required this.movieType});
+  const MovieLoadedState(
+      {@required this.movies, this.movieType = MovieType.none});
 
   @override
   List<Object> get props => [movies, movieType];

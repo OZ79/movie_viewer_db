@@ -55,6 +55,35 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
         yield MovieErrorState(message: e.toString());
       }
     }
+
+    if (event is FetchMovieListPageBySearchEvent) {
+      try {
+        MoviePage moviePage;
+        List<Movie> movies;
+
+        if (event.page == 1) {
+          yield MovieLoadingState();
+
+          moviePage = await movieRepository.fetchMoviePageBySearch(
+              event.query, event.page);
+          movies = moviePage.movies;
+        } else {
+          moviePage = await movieRepository.fetchMoviePageBySearch(
+              event.query, event.page);
+          movies = List.from((state as MovieListPagesLoadedState).movies);
+          movies.addAll(moviePage.movies);
+        }
+
+        yield MovieListPagesLoadedState(
+          movies: movies,
+          pages: moviePage.page,
+          totalPages: moviePage.totalPages,
+        );
+      } catch (e) {
+        print(e.toString());
+        yield MovieErrorState(message: e.toString());
+      }
+    }
   }
 
   @override
