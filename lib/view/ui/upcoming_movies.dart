@@ -24,10 +24,13 @@ class UpcomingMoviesWidget extends StatelessWidget {
       }
       return false;
     }, builder: (context, state) {
-      if (state is PreviewMovieLoadedState) {
+      if (state is PreviewMovieLoadedState &&
+          state.movies != null &&
+          state.movies[MovieType.upcoming] != null) {
         final random = Random();
-        final startIndex = random.nextInt(state.movies.length - 6);
-        return MoviePageView(state.movies.sublist(startIndex, startIndex + 5));
+        final movies = state.movies[MovieType.upcoming];
+        final startIndex = random.nextInt(movies.length - 6);
+        return MoviePageView(movies.sublist(startIndex, startIndex + 5));
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(

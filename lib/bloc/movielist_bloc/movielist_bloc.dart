@@ -74,7 +74,7 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
           movies.addAll(moviePage.movies);
         }
 
-        yield MovieListPagesLoadedState(
+        yield MovieListPagesBySearchLoadedState(
           movies: movies,
           pages: moviePage.page,
           totalPages: moviePage.totalPages,

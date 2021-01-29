@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  AppBottomNavigationBar();
+  final ValueChanged<int> onItemTapped;
+
+  AppBottomNavigationBar(this.onItemTapped);
 
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
@@ -11,6 +13,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    widget.onItemTapped(index);
+
     setState(() {
       _selectedIndex = index;
     });
