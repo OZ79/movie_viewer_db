@@ -10,14 +10,3 @@ class FetchMovieListPageEvent extends FetchMovieEvent {
   @override
   List<Object> get props => [movieType, page];
 }
-
-class FetchMovieListPageBySearchEvent extends MovieEvent {
-  final String query;
-  final int page;
-
-  const FetchMovieListPageBySearchEvent(
-      {@required this.query, @required this.page});
-
-  @override
-  List<Object> get props => [query, page];
-}

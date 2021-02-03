@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 //import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:movie_viewer_db/view/screens/home_screen.dart';
 import 'bloc/movie_bloc/movie_bloc.dart';
 import 'bloc/movie_bloc/movie_event.dart';
 import 'bloc/movielist_bloc/movielist_bloc.dart';
+import 'bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
 import 'view/screens/movie_detail_screen.dart';
@@ -19,7 +21,7 @@ import 'view/ui/bottom_nav_bar.dart';
 
 void main() {
   //timeDilation = 5;
-  //debugPaintSizeEnabled = true;
+  //debugDisableClipLayers = true;
   Bloc.observer = SimpleBlocObserver();
   runApp(App(movieRepository: MovieRepository()));
 }
@@ -52,10 +54,15 @@ class App extends StatelessWidget {
         BlocProvider<MovieListBloc>(
           create: (context) => MovieListBloc(movieRepository: movieRepository),
         ),
+        BlocProvider<MovieSearchBloc>(
+          create: (context) =>
+              MovieSearchBloc(movieRepository: movieRepository),
+        ),
       ],
       child: MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
+        //showPerformanceOverlay: true,
         debugShowCheckedModeBanner: false,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
@@ -113,7 +120,7 @@ class Routes {
     return PageRouteBuilder(
       pageBuilder: builder,
       settings: settings,
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 200),
       opaque: true,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final begin = const Offset(1.0, 0.0);

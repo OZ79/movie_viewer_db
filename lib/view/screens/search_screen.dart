@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
-import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
-import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
-import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
+import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
+import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_event.dart';
+import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_state.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
 import 'package:outline_search_bar/outline_search_bar.dart';
 
@@ -24,7 +24,7 @@ class _SearchState extends State<SearchScreen> {
     }
 
     _isLoading = true;
-    BlocProvider.of<MovieListBloc>(context)
+    BlocProvider.of<MovieSearchBloc>(context)
       ..add(FetchMovieListPageBySearchEvent(query: _query, page: page));
   }
 
@@ -57,7 +57,7 @@ class _SearchState extends State<SearchScreen> {
               textStyle: TextStyle(fontSize: 20),
               onSearchButtonPressed: onSearchButtonPressed,
             ),
-            BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
+            BlocBuilder<MovieSearchBloc, MovieState>(builder: (context, state) {
               if (state is MovieListPagesBySearchLoadedState) {
                 _isLoading = false;
 

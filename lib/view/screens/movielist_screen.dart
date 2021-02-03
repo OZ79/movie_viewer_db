@@ -7,6 +7,7 @@ import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
+import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
@@ -29,7 +30,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
   void initState() {
     super.initState();
 
-    _loadPage();
+    //_loadPage();
   }
 
   void _loadPage([int page = 1]) {
@@ -114,6 +115,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   @override
   void dispose() {
+    print('dispose');
     _scrollController.dispose();
     super.dispose();
   }

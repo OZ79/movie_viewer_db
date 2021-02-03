@@ -42,15 +42,9 @@ class MovieIem extends StatelessWidget {
               SizedBox(
                   width: 92,
                   height: imageHeight,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(15),
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5)),
-                      child: !imageUrl.contains("null")
-                          ? Image(
-                              fit: BoxFit.cover, image: NetworkImage(imageUrl))
-                          : const Icon(Icons.movie))),
+                  child: !imageUrl.contains("null")
+                      ? Image(fit: BoxFit.cover, image: NetworkImage(imageUrl))
+                      : const Icon(Icons.movie)),
               const SizedBox(width: 8),
               Container(
                 //color: Colors.yellow,
