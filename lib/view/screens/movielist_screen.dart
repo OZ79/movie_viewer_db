@@ -29,8 +29,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
   @override
   void initState() {
     super.initState();
-
-    //_loadPage();
   }
 
   void _loadPage([int page = 1]) {
@@ -72,6 +70,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
           ButtonAppBar(_onItemSelected),
           const SizedBox(height: 15),
           BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
+            if (state is MovieInitialState) {
+              _loadPage();
+            }
+
             if (state is MovieListPagesLoadedState) {
               if (_scrollController.hasClients) {
                 _jumpTo();
