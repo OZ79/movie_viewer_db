@@ -44,6 +44,7 @@ class _SearchState extends State<SearchScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: GestureDetector(
+          key: ValueKey('ss_GestureDetector'),
           behavior: HitTestBehavior.opaque,
           //splashColor: Colors.transparent,
           //highlightColor: Colors.transparent,
@@ -52,6 +53,7 @@ class _SearchState extends State<SearchScreen> {
           },
           child: Column(children: [
             OutlineSearchBar(
+              key: ValueKey('ss_OutlineSearchBar'),
               margin: const EdgeInsets.all(5),
               hintText: 'SEARCH',
               borderRadius: BorderRadius.circular(15),
@@ -72,6 +74,7 @@ class _SearchState extends State<SearchScreen> {
 
                 return Expanded(
                   child: ListView.builder(
+                      key: ValueKey('ss_ListView'),
                       itemExtent: 138,
                       itemCount: state.hasReachedMax
                           ? state.movies.length
