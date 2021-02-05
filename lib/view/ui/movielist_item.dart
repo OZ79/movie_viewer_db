@@ -24,6 +24,7 @@ class MovieItem extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     final imageHeight = 138.0;
     return GestureDetector(
+      key: ValueKey('MovieItem_$movieId'),
       onTap: () {
         print(movieId);
       },
@@ -42,6 +43,7 @@ class MovieItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
+                  key: ValueKey('MovieItem_$imageUrl'),
                   width: 92,
                   height: imageHeight,
                   child: ClipRRect(

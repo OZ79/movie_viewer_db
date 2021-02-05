@@ -45,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const HeaderBg(),
               SizedBox(
                   height: Device.get().isPhone ? 300 : 320,
-                  child: UpcomingMoviesWidget())
+                  child: UpcomingMoviesWidget(
+                      key: ValueKey('UpcomingMoviesWidget')))
             ]),
             const SizedBox(height: 20),
             BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is PreviewMovieLoadedState &&
                   state.movies[MovieType.popular] != null) {
                 return Container(
+                    key: ValueKey(MovieType.popular),
                     height: 200,
                     child: PreviewMovieList(
                         "POPULAR", state.movies[MovieType.popular]));
@@ -78,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is PreviewMovieLoadedState &&
                   state.movies[MovieType.now_playing] != null) {
                 return Container(
+                    key: ValueKey(MovieType.now_playing),
                     height: 200,
                     child: PreviewMovieList(
                         "NOW PLAYING", state.movies[MovieType.now_playing]));
@@ -98,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is PreviewMovieLoadedState &&
                   state.movies[MovieType.upcoming] != null) {
                 return Container(
+                    key: ValueKey(MovieType.upcoming),
                     height: 200,
                     child: PreviewMovieList(
                         "UPCAMING", state.movies[MovieType.upcoming]));
@@ -118,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is PreviewMovieLoadedState &&
                   state.movies[MovieType.top_rated] != null) {
                 return Container(
+                    key: ValueKey(MovieType.top_rated),
                     height: 200,
                     child: PreviewMovieList(
                         "TOP RATED", state.movies[MovieType.top_rated]));

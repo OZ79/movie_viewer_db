@@ -14,6 +14,8 @@ import 'package:movie_viewer_db/view/ui/page_view_indicator.dart';
 import '../../config.dart';
 
 class UpcomingMoviesWidget extends StatelessWidget {
+  UpcomingMoviesWidget({key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -30,7 +32,9 @@ class UpcomingMoviesWidget extends StatelessWidget {
         final random = Random();
         final movies = state.movies[MovieType.upcoming];
         final startIndex = random.nextInt(movies.length - 6);
-        return MoviePageView(movies.sublist(startIndex, startIndex + 5));
+        return MoviePageView(
+            key: ValueKey('MoviePageView'),
+            data: movies.sublist(startIndex, startIndex + 5));
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(
@@ -49,7 +53,7 @@ class UpcomingMoviesWidget extends StatelessWidget {
 class MoviePageView extends StatefulWidget {
   final List<Movie> data;
 
-  MoviePageView(this.data);
+  MoviePageView({key, this.data}) : super(key: key);
 
   @override
   _MoviePageViewState createState() => _MoviePageViewState();
@@ -81,11 +85,13 @@ class _MoviePageViewState extends State<MoviePageView> {
           SizedBox(
               height: Device.get().isPhone ? 270 : 290,
               child: PageView.builder(
+                  key: ValueKey('PageView'),
                   controller: _pageController,
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final movie = widget.data[index];
                     return MovieItem(
+                      key: ValueKey('MovieItem_${movie.backPoster}'),
                       imageUrl: "$IMAGE_URL_500${movie.backPoster}",
                       title: movie.title,
                       index: index,
@@ -110,10 +116,12 @@ class MovieItem extends StatefulWidget {
   final PageController controller;
 
   const MovieItem(
-      {@required this.imageUrl,
+      {key,
+      @required this.imageUrl,
       @required this.title,
       @required this.index,
-      @required this.controller});
+      @required this.controller})
+      : super(key: key);
 
   @override
   _MovieItemState createState() => _MovieItemState();
@@ -159,6 +167,7 @@ class _MovieItemState extends State<MovieItem> {
     return Column(children: <Widget>[
       Expanded(
         child: Padding(
+          key: ValueKey('Padding_${widget.imageUrl}'),
           padding: const EdgeInsets.all(10),
           child: CachedNetworkImage(
             imageUrl: widget.imageUrl,

@@ -43,11 +43,13 @@ class PreviewMovieList extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
+            key: ValueKey(data),
             scrollDirection: Axis.horizontal,
             itemCount: data.length,
             itemBuilder: (context, index) {
               final movie = data[index];
               return MovieItem(
+                key: ValueKey('MovieItem_${movie.poster}'),
                 title: movie.title,
                 imageUrl: "$IMAGE_URL_92${movie.poster}",
                 rating: movie.rating,
@@ -66,7 +68,11 @@ class MovieItem extends StatelessWidget {
   final double rating;
 
   const MovieItem(
-      {@required this.title, @required this.imageUrl, @required this.rating});
+      {key,
+      @required this.title,
+      @required this.imageUrl,
+      @required this.rating})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +84,7 @@ class MovieItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
+              key: ValueKey(imageUrl),
               height: imageHeight,
               child: ClipRRect(
                 clipBehavior: Clip.hardEdge,

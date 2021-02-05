@@ -81,6 +81,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               _isLoading = false;
               return Expanded(
                 child: ListView.builder(
+                    key: ValueKey('ms_ListView'),
                     controller: _scrollController,
                     itemExtent: 138,
                     itemCount: state.hasReachedMax
@@ -93,7 +94,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       } else {
                         final movie = state.movies[index];
                         return MovieItem(
-                          key: ValueKey('mlc' + index.toString()),
+                          key: ValueKey('ms_MovieItem_$index'),
                           movieId: movie.id,
                           title: movie.title ?? 'no info',
                           releaseDate: movie.releaseDate ?? '',

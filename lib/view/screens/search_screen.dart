@@ -52,7 +52,7 @@ class _SearchState extends State<SearchScreen> {
           },
           child: Column(children: [
             OutlineSearchBar(
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               hintText: 'SEARCH',
               borderRadius: BorderRadius.circular(15),
               borderWidth: 2,
@@ -84,7 +84,7 @@ class _SearchState extends State<SearchScreen> {
                         } else {
                           final movie = state.movies[index];
                           return MovieItem(
-                            key: ValueKey('ss' + index.toString()),
+                            key: ValueKey('ss_$index'),
                             movieId: movie.id,
                             title: movie.title ?? 'no info',
                             releaseDate: movie.releaseDate ?? '',
