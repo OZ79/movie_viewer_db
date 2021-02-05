@@ -47,7 +47,7 @@ class PreviewMovieList extends StatelessWidget {
             itemCount: data.length,
             itemBuilder: (context, index) {
               final movie = data[index];
-              return MovieIem(
+              return MovieItem(
                 title: movie.title,
                 imageUrl: "$IMAGE_URL_92${movie.poster}",
                 rating: movie.rating,
@@ -60,12 +60,12 @@ class PreviewMovieList extends StatelessWidget {
   }
 }
 
-class MovieIem extends StatelessWidget {
+class MovieItem extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double rating;
 
-  const MovieIem(
+  const MovieItem(
       {@required this.title, @required this.imageUrl, @required this.rating});
 
   @override
@@ -80,6 +80,7 @@ class MovieIem extends StatelessWidget {
             SizedBox(
               height: imageHeight,
               child: ClipRRect(
+                clipBehavior: Clip.hardEdge,
                 borderRadius:
                     BorderRadius.only(bottomRight: Radius.circular(12)),
                 child: Image(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,7 @@ void main() {
   //timeDilation = 5;
   //debugDisableClipLayers = true;
   Bloc.observer = SimpleBlocObserver();
+  //HttpOverrides.global = MyHttpOverrides();
   runApp(App(movieRepository: MovieRepository()));
 }
 
@@ -62,8 +65,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
-        //showPerformanceOverlay: true,
-        debugShowCheckedModeBanner: false,
+        showPerformanceOverlay: true,
+        //debugShowCheckedModeBanner: false,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
               statusBarColor: Colors.black,
@@ -105,13 +108,16 @@ class Routes {
     RoutePageBuilder builder;
     switch (settings.name) {
       case Home:
-        builder = (context, animation, secondaryAnimation) => HomeScreen();
+        builder = (context, animation, secondaryAnimation) =>
+            HomeScreen(key: ValueKey('HomeScreen'));
         break;
       case MovieList:
-        builder = (context, animation, secondaryAnimation) => MovieListScreen();
+        builder = (context, animation, secondaryAnimation) =>
+            MovieListScreen(key: ValueKey('MovieListScreen'));
         break;
       case Search:
-        builder = (context, animation, secondaryAnimation) => SearchScreen();
+        builder = (context, animation, secondaryAnimation) =>
+            SearchScreen(key: ValueKey('SearchScreen'));
         break;
       default:
         throw Exception('Invalid route: ${settings.name}');

@@ -12,6 +12,8 @@ import 'package:movie_viewer_db/view/ui/preview_movielist.dart';
 import 'package:movie_viewer_db/view/ui/upcoming_movies.dart';
 
 class HomeScreen extends StatefulWidget {
+  HomeScreen({key}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -62,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return Container(
                   height: 200,
-                  child: Center(child: const CircularProgressIndicator()));
+                  child:
+                      const Center(child: const CircularProgressIndicator()));
             }),
             const SizedBox(height: 20),
             BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -81,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return Container(
                   height: 200,
-                  child: Center(child: const CircularProgressIndicator()));
+                  child:
+                      const Center(child: const CircularProgressIndicator()));
             }),
             const SizedBox(height: 20),
             BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -100,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return Container(
                   height: 200,
-                  child: Center(child: const CircularProgressIndicator()));
+                  child:
+                      const Center(child: const CircularProgressIndicator()));
             }),
             const SizedBox(height: 20),
             BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -119,7 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return Container(
                   height: 200,
-                  child: Center(child: const CircularProgressIndicator()));
+                  child:
+                      const Center(child: const CircularProgressIndicator()));
             }),
           ]),
         ),

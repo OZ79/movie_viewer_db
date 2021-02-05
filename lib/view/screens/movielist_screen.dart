@@ -15,6 +15,8 @@ import 'package:movie_viewer_db/view/ui/movielist_item.dart';
 import '../../config.dart';
 
 class MovieListScreen extends StatefulWidget {
+  MovieListScreen({key}) : super(key: key);
+
   @override
   _MovieListScreenState createState() => _MovieListScreenState();
 }
@@ -25,11 +27,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
   bool _isItemSelected = false;
   MovieType _curentMovieType = MovieType.popular;
   Map<MovieType, double> _scrollPosition = {};
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void _loadPage([int page = 1]) {
     if (_isLoading) {
@@ -71,7 +68,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
           const SizedBox(height: 15),
           BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
             if (state is MovieInitialState) {
-              _loadPage();
+              Timer.run(() => _loadPage());
             }
 
             if (state is MovieListPagesLoadedState) {
@@ -95,7 +92,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
                         return Center(child: const CircularProgressIndicator());
                       } else {
                         final movie = state.movies[index];
-                        return MovieIem(
+                        return MovieItem(
+                          key: ValueKey('mlc' + index.toString()),
                           movieId: movie.id,
                           title: movie.title ?? 'no info',
                           releaseDate: movie.releaseDate ?? '',
@@ -108,7 +106,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               );
             }
             return Expanded(
-                child: Center(child: const CircularProgressIndicator()));
+                child: const Center(child: const CircularProgressIndicator()));
           }),
         ]),
       ),

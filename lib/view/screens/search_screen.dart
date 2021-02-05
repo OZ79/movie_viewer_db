@@ -10,6 +10,8 @@ import 'package:outline_search_bar/outline_search_bar.dart';
 import '../../config.dart';
 
 class SearchScreen extends StatefulWidget {
+  SearchScreen({key}) : super(key: key);
+
   @override
   _SearchState createState() => _SearchState();
 }
@@ -54,7 +56,7 @@ class _SearchState extends State<SearchScreen> {
               hintText: 'SEARCH',
               borderRadius: BorderRadius.circular(15),
               borderWidth: 2,
-              textStyle: TextStyle(fontSize: 20),
+              textStyle: const TextStyle(fontSize: 20),
               onSearchButtonPressed: onSearchButtonPressed,
             ),
             BlocBuilder<MovieSearchBloc, MovieState>(builder: (context, state) {
@@ -62,10 +64,10 @@ class _SearchState extends State<SearchScreen> {
                 _isLoading = false;
 
                 if (state.movies.isEmpty) {
-                  return Expanded(
-                      child: Center(
+                  return const Expanded(
+                      child: const Center(
                           child: const Text('No results',
-                              style: TextStyle(fontSize: 19))));
+                              style: const TextStyle(fontSize: 19))));
                 }
 
                 return Expanded(
@@ -81,7 +83,8 @@ class _SearchState extends State<SearchScreen> {
                               child: const CircularProgressIndicator());
                         } else {
                           final movie = state.movies[index];
-                          return MovieIem(
+                          return MovieItem(
+                            key: ValueKey('ss' + index.toString()),
                             movieId: movie.id,
                             title: movie.title ?? 'no info',
                             releaseDate: movie.releaseDate ?? '',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
-class MovieIem extends StatelessWidget {
+class MovieItem extends StatelessWidget {
   final int movieId;
   final String title;
   final String releaseDate;
@@ -9,13 +9,15 @@ class MovieIem extends StatelessWidget {
   final String imageUrl;
   final double rating;
 
-  const MovieIem(
-      {@required this.movieId,
+  const MovieItem(
+      {key,
+      @required this.movieId,
       @required this.title,
       @required this.releaseDate,
       @required this.overview,
       @required this.imageUrl,
-      @required this.rating});
+      @required this.rating})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +44,16 @@ class MovieIem extends StatelessWidget {
               SizedBox(
                   width: 92,
                   height: imageHeight,
-                  child: !imageUrl.contains("null")
-                      ? Image(fit: BoxFit.cover, image: NetworkImage(imageUrl))
-                      : const Icon(Icons.movie)),
+                  child: ClipRRect(
+                      clipBehavior: Clip.hardEdge,
+                      borderRadius: const BorderRadius.only(
+                          bottomRight: const Radius.circular(15),
+                          topLeft: const Radius.circular(5),
+                          bottomLeft: const Radius.circular(5)),
+                      child: !imageUrl.contains("null")
+                          ? Image(
+                              fit: BoxFit.cover, image: NetworkImage(imageUrl))
+                          : const Icon(Icons.movie))),
               const SizedBox(width: 8),
               Container(
                 //color: Colors.yellow,
@@ -96,7 +105,7 @@ class MovieIem extends StatelessWidget {
                           borderColor: Colors.yellow[700],
                           mainAxisAlignment: MainAxisAlignment.start,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(

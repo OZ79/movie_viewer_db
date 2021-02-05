@@ -36,6 +36,7 @@ class Poster extends StatelessWidget {
                       ], //BoxShadow
                     ),
                     child: ClipRRect(
+                        clipBehavior: Clip.hardEdge,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         child:
                             SizedBox(width: 154, height: 231, child: child))),

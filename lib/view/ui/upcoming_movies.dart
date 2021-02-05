@@ -36,7 +36,7 @@ class UpcomingMoviesWidget extends StatelessWidget {
           child: Text(
             state.message,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 20, color: Colors.black54),
+            style: const TextStyle(fontSize: 18, color: Colors.black54),
           ),
         );
       }
