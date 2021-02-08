@@ -59,59 +59,54 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(children: [
-          const SizedBox(height: 15),
-          ButtonAppBar(_onItemSelected),
-          const SizedBox(height: 15),
-          BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
-            if (state is MovieInitialState) {
-              Timer.run(() => _loadPage());
-            }
+    return Column(children: [
+      const SizedBox(height: 15),
+      ButtonAppBar(_onItemSelected),
+      const SizedBox(height: 15),
+      BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
+        if (state is MovieInitialState) {
+          Timer.run(() => _loadPage());
+        }
 
-            if (state is MovieListPagesLoadedState) {
-              if (_scrollController.hasClients) {
-                _jumpTo();
-              } else {
-                Timer.run(() => _jumpTo());
-              }
+        if (state is MovieListPagesLoadedState) {
+          if (_scrollController.hasClients) {
+            _jumpTo();
+          } else {
+            Timer.run(() => _jumpTo());
+          }
 
-              _isLoading = false;
-              return Expanded(
-                child: ListView.builder(
-                    key: ValueKey('ms_ListView'),
-                    controller: _scrollController,
-                    itemExtent: 138,
-                    itemCount: state.hasReachedMax
-                        ? state.movies.length
-                        : state.movies.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index >= state.movies.length) {
-                        _loadPage(state.pages + 1);
-                        return Center(child: const CircularProgressIndicator());
-                      } else {
-                        final movie = state.movies[index];
-                        return MovieItem(
-                          key: ValueKey('ms_MovieItem_$index'),
-                          movieId: movie.id,
-                          title: movie.title ?? 'no info',
-                          releaseDate: movie.releaseDate ?? '',
-                          overview: movie.overview ?? 'no info',
-                          imageUrl: "$IMAGE_URL_92${movie.poster}",
-                          rating: movie.rating ?? 0,
-                        );
-                      }
-                    }),
-              );
-            }
-            return Expanded(
-                child: const Center(child: const CircularProgressIndicator()));
-          }),
-        ]),
-      ),
-    );
+          _isLoading = false;
+          return Expanded(
+            child: ListView.builder(
+                key: ValueKey('ms_ListView'),
+                controller: _scrollController,
+                itemExtent: 138,
+                itemCount: state.hasReachedMax
+                    ? state.movies.length
+                    : state.movies.length + 1,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index >= state.movies.length) {
+                    _loadPage(state.pages + 1);
+                    return Center(child: const CircularProgressIndicator());
+                  } else {
+                    final movie = state.movies[index];
+                    return MovieItem(
+                      key: ValueKey('ms_MovieItem_$index'),
+                      movieId: movie.id,
+                      title: movie.title ?? 'no info',
+                      releaseDate: movie.releaseDate ?? '',
+                      overview: movie.overview ?? 'no info',
+                      imageUrl: "$IMAGE_URL_92${movie.poster}",
+                      rating: movie.rating ?? 0,
+                    );
+                  }
+                }),
+          );
+        }
+        return Expanded(
+            child: const Center(child: const CircularProgressIndicator()));
+      }),
+    ]);
   }
 
   @override

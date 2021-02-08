@@ -26,7 +26,7 @@ class _HeaderBgState extends State<HeaderBg> {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       opacity: _opacity,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 200),
       child: Stack(children: <Widget>[
         ClipPath(
             clipper: WaveClipperOne(),

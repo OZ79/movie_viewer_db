@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +12,9 @@ import 'bloc/movie_bloc/movie_bloc.dart';
 import 'bloc/movie_bloc/movie_event.dart';
 import 'bloc/movielist_bloc/movielist_bloc.dart';
 import 'bloc/moviesearch_bloc/moviesearch_bloc.dart';
+import 'bloc/navigation_bloc/navigation_bloc.dart';
+import 'bloc/navigation_bloc/navigation_event.dart';
+import 'bloc/navigation_bloc/navigation_state.dart';
 import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
 import 'view/screens/movie_detail_screen.dart';
@@ -39,9 +40,18 @@ void main() {
 
 class App extends StatelessWidget {
   final MovieRepositoryApi movieRepository;
-  final _navigatorKey = GlobalKey<NavigatorState>();
+  static final List<Widget> _pages = <Widget>[
+    HomeScreen(key: ValueKey('HomeScreen')),
+    MovieListScreen(key: ValueKey('MovieListScreen')),
+    SearchScreen(key: ValueKey('MovieListScreen'))
+  ];
 
   App({Key key, @required this.movieRepository}) : super(key: key);
+
+  void _onItemTapped(BuildContext context, int index) {
+    BlocProvider.of<NavigationBloc>(context)
+        .add(NavigationEvent(pageIndex: index));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +71,14 @@ class App extends StatelessWidget {
           create: (context) =>
               MovieSearchBloc(movieRepository: movieRepository),
         ),
+        BlocProvider<NavigationBloc>(
+          create: (context) => NavigationBloc(),
+        ),
       ],
       child: MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
-        showPerformanceOverlay: true,
+        //showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
@@ -73,23 +86,17 @@ class App extends StatelessWidget {
               statusBarIconBrightness: Brightness.light),
           child: Scaffold(
             backgroundColor: Colors.white,
-            bottomNavigationBar: AppBottomNavigationBar((index) => {
-                  _navigatorKey.currentState.pushNamed(Routes.routeNames[index])
-                }),
-            body: WillPopScope(
-              onWillPop: () async {
-                if (_navigatorKey.currentState.canPop()) {
-                  _navigatorKey.currentState.pop();
-                  return false;
-                }
-                return true;
-              },
-              child: Navigator(
-                key: _navigatorKey,
-                initialRoute: Routes.Home,
-                onGenerateRoute: Routes.generateRoute,
-              ),
-            ),
+            bottomNavigationBar: Builder(builder: (BuildContext context) {
+              return AppBottomNavigationBar(
+                  (index) => _onItemTapped(context, index));
+            }),
+            body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
+                builder: (context, state) {
+              if (state is NavigationState) {
+                return _pages.elementAt(state.pageIndex);
+              }
+              return Container();
+            })),
           ),
         ),
       ),
@@ -108,16 +115,14 @@ class Routes {
     RoutePageBuilder builder;
     switch (settings.name) {
       case Home:
-        builder = (context, animation, secondaryAnimation) =>
-            HomeScreen(key: ValueKey('HomeScreen'));
+        builder = (context, animation, secondaryAnimation) => Container();
         break;
       case MovieList:
         builder = (context, animation, secondaryAnimation) =>
             MovieListScreen(key: ValueKey('MovieListScreen'));
         break;
       case Search:
-        builder = (context, animation, secondaryAnimation) =>
-            SearchScreen(key: ValueKey('SearchScreen'));
+        builder = (context, animation, secondaryAnimation) => Container();
         break;
       default:
         throw Exception('Invalid route: ${settings.name}');
@@ -129,14 +134,7 @@ class Routes {
       transitionDuration: const Duration(milliseconds: 200),
       opaque: true,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final begin = const Offset(1.0, 0.0);
-        final end = Offset.zero;
-        final tween = Tween(begin: begin, end: end);
-        final offsetAnimation = animation.drive(tween);
-        return SlideTransition(
-          position: offsetAnimation,
-          child: child,
-        );
+        return child;
       },
     );
   }

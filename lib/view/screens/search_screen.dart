@@ -40,87 +40,81 @@ class _SearchState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: GestureDetector(
-          key: ValueKey('ss_GestureDetector'),
-          behavior: HitTestBehavior.opaque,
-          //splashColor: Colors.transparent,
-          //highlightColor: Colors.transparent,
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: Column(children: [
-            OutlineSearchBar(
-              key: ValueKey('ss_OutlineSearchBar'),
-              margin: const EdgeInsets.all(5),
-              hintText: 'SEARCH',
-              borderRadius: BorderRadius.circular(15),
-              borderWidth: 2,
-              textStyle: const TextStyle(fontSize: 20),
-              onSearchButtonPressed: onSearchButtonPressed,
-            ),
-            BlocBuilder<MovieSearchBloc, MovieState>(builder: (context, state) {
-              if (state is MovieListPagesBySearchLoadedState) {
-                _isLoading = false;
-
-                if (state.movies.isEmpty) {
-                  return const Expanded(
-                      child: const Center(
-                          child: const Text('No results',
-                              style: const TextStyle(fontSize: 19))));
-                }
-
-                return Expanded(
-                  child: ListView.builder(
-                      key: ValueKey('ss_ListView'),
-                      itemExtent: 138,
-                      itemCount: state.hasReachedMax
-                          ? state.movies.length
-                          : state.movies.length + 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index >= state.movies.length) {
-                          _loadPage(state.pages + 1);
-                          return Center(
-                              child: const CircularProgressIndicator());
-                        } else {
-                          final movie = state.movies[index];
-                          return MovieItem(
-                            key: ValueKey('ss_$index'),
-                            movieId: movie.id,
-                            title: movie.title ?? 'no info',
-                            releaseDate: movie.releaseDate ?? '',
-                            overview: movie.overview ?? 'no info',
-                            imageUrl: "$IMAGE_URL_92${movie.poster}",
-                            rating: movie.rating ?? 0,
-                          );
-                        }
-                      }),
-                );
-              }
-              if (state is MovieLoadingState) {
-                return Expanded(
-                    child: Center(child: const CircularProgressIndicator()));
-              }
-              if (state is MovieErrorState) {
-                _isLoading = false;
-                return Expanded(
-                    child: Center(
-                        child: const Text('No results',
-                            style: TextStyle(fontSize: 19))));
-              }
-              return Expanded(
-                  child: Center(
-                child: const Text(
-                  'No results',
-                  style: TextStyle(fontSize: 19),
-                ),
-              ));
-            }),
-          ]),
+    return GestureDetector(
+      key: ValueKey('ss_GestureDetector'),
+      behavior: HitTestBehavior.opaque,
+      //splashColor: Colors.transparent,
+      //highlightColor: Colors.transparent,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Column(children: [
+        OutlineSearchBar(
+          key: ValueKey('ss_OutlineSearchBar'),
+          margin: const EdgeInsets.all(5),
+          hintText: 'SEARCH',
+          borderRadius: BorderRadius.circular(15),
+          borderWidth: 2,
+          textStyle: const TextStyle(fontSize: 20),
+          onSearchButtonPressed: onSearchButtonPressed,
         ),
-      ),
+        BlocBuilder<MovieSearchBloc, MovieState>(builder: (context, state) {
+          if (state is MovieListPagesBySearchLoadedState) {
+            _isLoading = false;
+
+            if (state.movies.isEmpty) {
+              return const Expanded(
+                  child: const Center(
+                      child: const Text('No results',
+                          style: const TextStyle(fontSize: 19))));
+            }
+
+            return Expanded(
+              child: ListView.builder(
+                  key: ValueKey('ss_ListView'),
+                  itemExtent: 138,
+                  itemCount: state.hasReachedMax
+                      ? state.movies.length
+                      : state.movies.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index >= state.movies.length) {
+                      _loadPage(state.pages + 1);
+                      return Center(child: const CircularProgressIndicator());
+                    } else {
+                      final movie = state.movies[index];
+                      return MovieItem(
+                        key: ValueKey('ss_$index'),
+                        movieId: movie.id,
+                        title: movie.title ?? 'no info',
+                        releaseDate: movie.releaseDate ?? '',
+                        overview: movie.overview ?? 'no info',
+                        imageUrl: "$IMAGE_URL_92${movie.poster}",
+                        rating: movie.rating ?? 0,
+                      );
+                    }
+                  }),
+            );
+          }
+          if (state is MovieLoadingState) {
+            return Expanded(
+                child: Center(child: const CircularProgressIndicator()));
+          }
+          if (state is MovieErrorState) {
+            _isLoading = false;
+            return Expanded(
+                child: Center(
+                    child: const Text('No results',
+                        style: TextStyle(fontSize: 19))));
+          }
+          return Expanded(
+              child: Center(
+            child: const Text(
+              'No results',
+              style: TextStyle(fontSize: 19),
+            ),
+          ));
+        }),
+      ]),
     );
   }
 }
