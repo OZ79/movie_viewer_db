@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/view/screens/home_screen.dart';
 
 import 'bloc/movie_bloc/movie_bloc.dart';
-import 'bloc/movie_bloc/movie_event.dart';
 import 'bloc/movielist_bloc/movielist_bloc.dart';
 import 'bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'bloc/navigation_bloc/navigation_bloc.dart';
@@ -17,7 +16,6 @@ import 'bloc/navigation_bloc/navigation_event.dart';
 import 'bloc/navigation_bloc/navigation_state.dart';
 import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
-import 'view/screens/movie_detail_screen.dart';
 import 'view/screens/movielist_screen.dart';
 import 'view/screens/search_screen.dart';
 import 'view/ui/bottom_nav_bar.dart';
@@ -55,87 +53,105 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<MovieBloc>(
-          create: (context) => MovieBloc(movieRepository: movieRepository)
-            ..add(FetchPreviewMovieEvent(movieType: MovieType.popular))
-            ..add(FetchPreviewMovieEvent(movieType: MovieType.now_playing))
-            ..add(FetchPreviewMovieEvent(movieType: MovieType.upcoming))
-            ..add(FetchPreviewMovieEvent(movieType: MovieType.top_rated)),
-        ),
-        BlocProvider<MovieListBloc>(
-          create: (context) => MovieListBloc(movieRepository: movieRepository),
-        ),
-        BlocProvider<MovieSearchBloc>(
-          create: (context) =>
-              MovieSearchBloc(movieRepository: movieRepository),
-        ),
-        BlocProvider<NavigationBloc>(
-          create: (context) => NavigationBloc(),
-        ),
-      ],
-      child: MaterialApp(
+    return MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
         //showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-              statusBarColor: Colors.black,
-              statusBarIconBrightness: Brightness.light),
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            bottomNavigationBar: Builder(builder: (BuildContext context) {
-              return AppBottomNavigationBar(
-                  (index) => _onItemTapped(context, index));
-            }),
-            body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
-                builder: (context, state) {
-              if (state is NavigationState) {
-                return _pages.elementAt(state.pageIndex);
-              }
-              return Container();
-            })),
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<MovieBloc>(
+            create: (context) => MovieBloc(movieRepository: movieRepository),
           ),
+          BlocProvider<MovieListBloc>(
+            create: (context) =>
+                MovieListBloc(movieRepository: movieRepository),
+          ),
+          BlocProvider<MovieSearchBloc>(
+            create: (context) =>
+                MovieSearchBloc(movieRepository: movieRepository),
+          ),
+          BlocProvider<NavigationBloc>(
+            create: (context) => NavigationBloc(),
+          ),
+        ],
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          bottomNavigationBar: Builder(builder: (BuildContext context) {
+            return AppBottomNavigationBar(
+                (index) => _onItemTapped(context, index));
+          }),
+          body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
+              builder: (context, state) {
+            if (state is NavigationState) {
+              return PageAnimation(
+                child: _pages.elementAt(state.pageIndex),
+              );
+            }
+            return Container();
+          })),
         ),
       ),
-    );
+    ));
   }
 }
 
-class Routes {
-  static const String Home = '/';
-  static const String MovieList = '/MovieList';
-  static const String Search = '/Search';
+class PageAnimation extends StatefulWidget {
+  final Widget child;
 
-  static const routeNames = [Home, MovieList, Search];
+  PageAnimation({Key key, @required this.child}) : super(key: key);
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    RoutePageBuilder builder;
-    switch (settings.name) {
-      case Home:
-        builder = (context, animation, secondaryAnimation) => Container();
-        break;
-      case MovieList:
-        builder = (context, animation, secondaryAnimation) =>
-            MovieListScreen(key: ValueKey('MovieListScreen'));
-        break;
-      case Search:
-        builder = (context, animation, secondaryAnimation) => Container();
-        break;
-      default:
-        throw Exception('Invalid route: ${settings.name}');
-    }
+  @override
+  _PageAnimationState createState() => _PageAnimationState();
+}
 
-    return PageRouteBuilder(
-      pageBuilder: builder,
-      settings: settings,
-      transitionDuration: const Duration(milliseconds: 200),
-      opaque: true,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return child;
-      },
+class _PageAnimationState extends State<PageAnimation>
+    with TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Offset> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 0),
+      vsync: this,
+    )..forward();
+
+    _animation = Tween<Offset>(
+      begin: const Offset(0.2, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.decelerate,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _animation,
+      child: widget.child,
     );
+  }
+
+  @override
+  void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _controller.reset();
+    _controller.duration = const Duration(milliseconds: 300);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }

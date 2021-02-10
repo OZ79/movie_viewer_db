@@ -19,14 +19,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _animateBg;
+
   @override
   void initState() {
     super.initState();
 
-    //loadData();
+    if (BlocProvider.of<MovieBloc>(context).state is MovieInitialState) {
+      _animateBg = true;
+      _loadData();
+    } else {
+      _animateBg = false;
+    }
   }
 
-  void loadData() {
+  void _loadData() {
     BlocProvider.of<MovieBloc>(context)
       ..add(FetchPreviewMovieEvent(movieType: MovieType.popular))
       ..add(FetchPreviewMovieEvent(movieType: MovieType.now_playing))
@@ -39,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: Column(children: [
         Stack(children: <Widget>[
-          const HeaderBg(),
+          HeaderBg(animate: _animateBg),
           SizedBox(
               height: Device.get().isPhone ? 300 : 320,
               child:

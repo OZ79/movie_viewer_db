@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/view/screens/movie_detail_screen.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
 class MovieItem extends StatelessWidget {
@@ -21,12 +24,22 @@ class MovieItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final movieBloc = BlocProvider.of<MovieBloc>(context);
     Size screenSize = MediaQuery.of(context).size;
     final imageHeight = 138.0;
     return GestureDetector(
       key: ValueKey('MovieItem_$movieId'),
       onTap: () {
-        print(movieId);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return BlocProvider.value(
+              value: movieBloc,
+              child: MovieDetailScreen(movieId),
+            );
+          }),
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(5),

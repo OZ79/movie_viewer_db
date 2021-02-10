@@ -17,7 +17,7 @@ class StarRating extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.center,
   });
 
-  Widget buildStar(int index) {
+  Widget _buildStar(int index) {
     Icon icon;
 
     if (index >= rating) {
@@ -49,7 +49,7 @@ class StarRating extends StatelessWidget {
       mainAxisAlignment: mainAxisAlignment,
       children: new List.generate(
         starCount,
-        (index) => buildStar(index),
+        (index) => _buildStar(index),
       ),
     );
   }

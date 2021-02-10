@@ -7,6 +7,8 @@ class Poster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Alignment aligntment = Alignment(-0.9, 0.0);
+    double opacity = 0;
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 290,
@@ -15,14 +17,19 @@ class Poster extends StatelessWidget {
           fit: BoxFit.cover,
           frameBuilder:
               (_, Widget child, int frame, bool wasSynchronouslyLoaded) {
+            if (!wasSynchronouslyLoaded && frame != null ||
+                wasSynchronouslyLoaded && frame >= 1) {
+              aligntment = Alignment(-0.9, 1.0);
+              opacity = 1;
+            }
+
             return AnimatedAlign(
-              alignment: frame == null || wasSynchronouslyLoaded
-                  ? Alignment(-0.9, 0.0)
-                  : Alignment(-0.9, 1),
+              alignment:
+                  aligntment, // frame == 0 ? Alignment(-0.9, 0.0) : Alignment(-0.9, 1),
               duration: const Duration(seconds: 1),
               curve: Curves.easeOutQuint,
               child: AnimatedOpacity(
-                opacity: frame == null || wasSynchronouslyLoaded ? 0 : 1,
+                opacity: opacity, //frame == 0 ? 0 : 1,
                 duration: const Duration(milliseconds: 200),
                 child: Container(
                     decoration: BoxDecoration(

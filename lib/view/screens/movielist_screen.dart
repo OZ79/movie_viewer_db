@@ -7,7 +7,6 @@ import 'package:movie_viewer_db/bloc/base_movie_state.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
-import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
@@ -27,6 +26,15 @@ class _MovieListScreenState extends State<MovieListScreen> {
   bool _isItemSelected = false;
   MovieType _curentMovieType = MovieType.popular;
   Map<MovieType, double> _scrollPosition = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (BlocProvider.of<MovieListBloc>(context).state is MovieInitialState) {
+      _loadPage();
+    }
+  }
 
   void _loadPage([int page = 1]) {
     if (_isLoading) {
@@ -64,10 +72,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
       ButtonAppBar(_onItemSelected),
       const SizedBox(height: 15),
       BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
-        if (state is MovieInitialState) {
-          Timer.run(() => _loadPage());
-        }
-
         if (state is MovieListPagesLoadedState) {
           if (_scrollController.hasClients) {
             _jumpTo();
@@ -111,7 +115,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   @override
   void dispose() {
-    print('dispose');
     _scrollController.dispose();
     super.dispose();
   }

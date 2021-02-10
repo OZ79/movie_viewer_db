@@ -15,10 +15,12 @@ class PreviewMovieLoadedState extends MovieLoadedState {
 }
 
 class MovieDetailLoadedState extends MovieState {
+  final int movieId;
   final MovieDetail movieDetail;
 
-  const MovieDetailLoadedState({@required this.movieDetail});
+  const MovieDetailLoadedState(
+      {@required this.movieId, @required this.movieDetail});
 
   @override
-  List<Object> get props => [movieDetail];
+  List<Object> get props => [movieId, movieDetail];
 }

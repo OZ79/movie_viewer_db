@@ -13,6 +13,10 @@ import 'package:transparent_image/transparent_image.dart';
 import '../../config.dart';
 
 class MovieDetailScreen extends StatefulWidget {
+  final int movieId;
+
+  MovieDetailScreen(this.movieId);
+
   @override
   _MovieDetailScreenState createState() => _MovieDetailScreenState();
 }
@@ -27,7 +31,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   void loadData() {
     BlocProvider.of<MovieBloc>(context)
-      ..add(FetchMovieDetailEvent(movieId: 353081));
+      ..add(FetchMovieDetailEvent(movieId: widget.movieId));
     // 675327 , 531219, 777670, 763440, 293863, 615761, 313369, 956, 353081
   }
 
@@ -62,137 +66,142 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(
-      buildWhen: (_, state) {
-        if (state is MovieDetailLoadedState) {
-          return true;
-        }
-        return false;
-      },
-      builder: (context, state) {
-        if (state is MovieDetailLoadedState) {
-          final movieDetail = state.movieDetail;
-          final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
-          final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: BlocBuilder<MovieBloc, MovieState>(
+        buildWhen: (_, state) {
+          if (state is MovieDetailLoadedState) {
+            return true;
+          }
+          return false;
+        },
+        builder: (context, state) {
+          if (state is MovieDetailLoadedState &&
+              state.movieId == widget.movieId) {
+            final movieDetail = state.movieDetail;
+            final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
+            final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
 
-          movieDetail.prodCompanies
-              .removeWhere((element) => element['logo_path'] == null);
+            movieDetail.prodCompanies
+                .removeWhere((element) => element['logo_path'] == null);
 
-          return SingleChildScrollView(
-            child: Stack(children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height - 40,
-                ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Column(children: [
-                        Header(backPosterUrl),
-                        Row(children: [
-                          SizedBox(width: 165),
-                          Column(children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width - 165,
-                                child: Rating(movieDetail.rating)),
-                            Text(movieDetail.releaseDate,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: const Color(0xFF1E88E5),
-                                ))
+            return SingleChildScrollView(
+              child: Stack(children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height - 40,
+                  ),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Column(children: [
+                          Header(backPosterUrl),
+                          Row(children: [
+                            SizedBox(width: 165),
+                            Column(children: [
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 165,
+                                  child: Rating(movieDetail.rating)),
+                              Text(movieDetail.releaseDate,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: const Color(0xFF1E88E5),
+                                  ))
+                            ])
                           ])
-                        ])
-                      ]),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 12, top: 15, bottom: 20),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: WrapLayout(
-                                itemCount: movieDetail.prodCountries.length,
-                                direction: Axis.vertical,
-                                spacing: -3,
-                                itemBuilder: (context, index) {
-                                  return buildCountryItem(
-                                      movieDetail.prodCountries, index);
-                                })),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(left: 12, right: 12),
-                          child: WrapLayout(
-                              itemCount: movieDetail.prodCompanies.length,
-                              alignment: WrapAlignment.center,
-                              spacing: 40,
-                              runSpacing: 5,
-                              itemBuilder: (context, index) {
-                                return buildCompanyItem(
-                                    movieDetail.prodCompanies, index);
-                              })),
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, bottom: 20, left: 12, right: 12),
-                          child: WrapLayout(
-                              itemCount: movieDetail.genres.length,
-                              alignment: WrapAlignment.center,
-                              spacing: 15,
-                              itemBuilder: (context, index) {
-                                return buildGenreItem(
-                                    movieDetail.genres, index);
-                              })),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(children: [
-                          Text(movieDetail.title,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 27,
-                                color: const Color(0xFF1E88E5),
-                              )),
-                          SizedBox(height: 15),
-                          Text(
-                            movieDetail.overview,
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 21,
-                                color: const Color(0xFF1E88E5)),
-                          )
                         ]),
-                      ),
-                      Container(
-                        height: 180,
-                        margin: EdgeInsets.only(top: 15),
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemExtent: 108,
-                          itemCount: movieDetail.casts.length,
-                          itemBuilder: (context, index) {
-                            final imageUrl =
-                                "$IMAGE_URL_92${movieDetail.casts[index].profilePath}";
-                            return !imageUrl.contains('null')
-                                ? CastItem(
-                                    imageUrl,
-                                    movieDetail.casts[index].name,
-                                    movieDetail.casts[index].character)
-                                : null;
-                          },
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 12, top: 15, bottom: 20),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: WrapLayout(
+                                  itemCount: movieDetail.prodCountries.length,
+                                  direction: Axis.vertical,
+                                  spacing: -3,
+                                  itemBuilder: (context, index) {
+                                    return buildCountryItem(
+                                        movieDetail.prodCountries, index);
+                                  })),
                         ),
-                      ),
-                    ]),
-              ),
-              Poster(posterUrl: posterUrl)
-            ]),
-          );
-        }
-        return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Center(child: const CircularProgressIndicator()));
-      },
+                        Padding(
+                            padding: EdgeInsets.only(left: 12, right: 12),
+                            child: WrapLayout(
+                                itemCount: movieDetail.prodCompanies.length,
+                                alignment: WrapAlignment.center,
+                                spacing: 40,
+                                runSpacing: 5,
+                                itemBuilder: (context, index) {
+                                  return buildCompanyItem(
+                                      movieDetail.prodCompanies, index);
+                                })),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20, bottom: 20, left: 12, right: 12),
+                            child: WrapLayout(
+                                itemCount: movieDetail.genres.length,
+                                alignment: WrapAlignment.center,
+                                spacing: 15,
+                                itemBuilder: (context, index) {
+                                  return buildGenreItem(
+                                      movieDetail.genres, index);
+                                })),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(children: [
+                            Text(movieDetail.title,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 27,
+                                  color: const Color(0xFF1E88E5),
+                                )),
+                            SizedBox(height: 15),
+                            Text(
+                              movieDetail.overview,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 21,
+                                  color: const Color(0xFF1E88E5)),
+                            )
+                          ]),
+                        ),
+                        Container(
+                          height: 180,
+                          margin: EdgeInsets.only(top: 15),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemExtent: 108,
+                            itemCount: movieDetail.casts.length,
+                            itemBuilder: (context, index) {
+                              final imageUrl =
+                                  "$IMAGE_URL_92${movieDetail.casts[index].profilePath}";
+                              return !imageUrl.contains('null')
+                                  ? CastItem(
+                                      imageUrl,
+                                      movieDetail.casts[index].name,
+                                      movieDetail.casts[index].character)
+                                  : null;
+                            },
+                          ),
+                        ),
+                      ]),
+                ),
+                Poster(posterUrl: posterUrl)
+              ]),
+            );
+          }
+          return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Center(child: const CircularProgressIndicator()));
+        },
+      ),
     );
   }
 }

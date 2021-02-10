@@ -52,7 +52,7 @@ class _SearchState extends State<SearchScreen> {
         OutlineSearchBar(
           key: ValueKey('ss_OutlineSearchBar'),
           margin: const EdgeInsets.all(5),
-          hintText: 'SEARCH',
+          hintText: 'Search',
           borderRadius: BorderRadius.circular(15),
           borderWidth: 2,
           textStyle: const TextStyle(fontSize: 20),

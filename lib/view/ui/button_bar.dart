@@ -43,7 +43,6 @@ class _ButtonAppBarState extends State<ButtonAppBar> {
 
   void onEndSelection() {
     setState(() => _selectedColorIndex = _selectedIndex);
-    //Timer.run(() => widget.onItemSelected(_selectedIndex));
   }
 
   @override
