@@ -34,7 +34,10 @@ class MovieDetail {
         releaseDate = json['release_date'],
         rating = json['vote_average'],
         casts = List<Cast>.from(
-            json['credits']['cast'].map((json) => Cast.fromJson(json)));
+            json['credits']['cast'].map((json) => Cast.fromJson(json))) {
+    prodCompanies.removeWhere((element) => element['logo_path'] == null);
+    casts.removeWhere((element) => element.profilePath == null);
+  }
 }
 
 class Cast {
