@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,13 +40,9 @@ void main() {
 class App extends StatelessWidget {
   final MovieRepositoryApi movieRepository;
   static final List<Widget> _pages = <Widget>[
-    PageAnimation(
-        key: ValueKey(0), child: HomeScreen(key: ValueKey('HomeScreen'))),
-    PageAnimation(
-        key: ValueKey(1),
-        child: MovieListScreen(key: ValueKey('MovieListScreen'))),
-    PageAnimation(
-        key: ValueKey(2), child: SearchScreen(key: ValueKey('SearchScreen')))
+    HomeScreen(key: ValueKey('HomeScreen')),
+    MovieListScreen(key: ValueKey('MovieListScreen')),
+    SearchScreen(key: ValueKey('SearchScreen'))
   ];
 
   App({Key key, @required this.movieRepository}) : super(key: key);
@@ -93,11 +90,26 @@ class App extends StatelessWidget {
           body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
               builder: (context, state) {
             if (state is NavigationState) {
-              return IndexedStack(
-                key: ValueKey('IndexedStack'),
-                children: _pages,
-                index: state.pageIndex,
-              );
+              return PageTransitionSwitcher(
+                  child: _pages[state.pageIndex],
+                  transitionBuilder: (
+                    child,
+                    primaryAnimation,
+                    secondaryAnimation,
+                  ) {
+                    return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.2, 0.0),
+                          end: Offset.zero,
+                        ).animate(primaryAnimation),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 1.0,
+                            end: 0.0,
+                          ).animate(secondaryAnimation),
+                          child: child,
+                        ));
+                  });
             }
             return Container();
           })),
