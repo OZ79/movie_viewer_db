@@ -39,9 +39,13 @@ void main() {
 class App extends StatelessWidget {
   final MovieRepositoryApi movieRepository;
   static final List<Widget> _pages = <Widget>[
-    HomeScreen(key: ValueKey('HomeScreen')),
-    MovieListScreen(key: ValueKey('MovieListScreen')),
-    SearchScreen(key: ValueKey('MovieListScreen'))
+    PageAnimation(
+        key: ValueKey(0), child: HomeScreen(key: ValueKey('HomeScreen'))),
+    PageAnimation(
+        key: ValueKey(1),
+        child: MovieListScreen(key: ValueKey('MovieListScreen'))),
+    PageAnimation(
+        key: ValueKey(2), child: SearchScreen(key: ValueKey('SearchScreen')))
   ];
 
   App({Key key, @required this.movieRepository}) : super(key: key);
@@ -58,6 +62,7 @@ class App extends StatelessWidget {
         //builder: DevicePreview.appBuilder,
         //showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
+        //checkerboardRasterCacheImages: false,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -88,8 +93,10 @@ class App extends StatelessWidget {
           body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
               builder: (context, state) {
             if (state is NavigationState) {
-              return PageAnimation(
-                child: _pages.elementAt(state.pageIndex),
+              return IndexedStack(
+                key: ValueKey('IndexedStack'),
+                children: _pages,
+                index: state.pageIndex,
               );
             }
             return Container();
@@ -111,6 +118,7 @@ class PageAnimation extends StatefulWidget {
 
 class _PageAnimationState extends State<PageAnimation>
     with TickerProviderStateMixin {
+  bool isInit = true;
   AnimationController _controller;
   Animation<Offset> _animation;
 
@@ -119,9 +127,9 @@ class _PageAnimationState extends State<PageAnimation>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 0),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
-    )..forward();
+    );
 
     _animation = Tween<Offset>(
       begin: const Offset(0.2, 0.0),
@@ -134,20 +142,36 @@ class _PageAnimationState extends State<PageAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: widget.child,
-    );
+    return BlocBuilder<NavigationBloc, NavigationState>(buildWhen: (_, state) {
+      if ((widget.key as ValueKey).value == state.pageIndex) {
+        return true;
+      }
+      return false;
+    }, builder: (context, state) {
+      if ((widget.key as ValueKey).value == state.pageIndex) {
+        _controller.reset();
+        _controller.duration = (widget.key as ValueKey).value == 0 && isInit
+            ? Duration(milliseconds: 0)
+            : Duration(milliseconds: 300);
+        _controller.forward();
+        isInit = false;
+      }
+
+      return SlideTransition(
+        position: _animation,
+        child: widget.child,
+      );
+    });
   }
 
-  @override
+  /*@override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     _controller.reset();
     _controller.duration = const Duration(milliseconds: 300);
     _controller.forward();
-  }
+  }*/
 
   @override
   void dispose() {
