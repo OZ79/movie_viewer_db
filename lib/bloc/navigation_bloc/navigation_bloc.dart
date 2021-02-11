@@ -12,7 +12,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     NavigationEvent event,
   ) async* {
     if (event is NavigationEvent) {
-      yield NavigationState(pageIndex: event.pageIndex);
+      yield NavigationState(pageIndex: event.pageIndex, bottom: event.bottom);
     }
   }
 }

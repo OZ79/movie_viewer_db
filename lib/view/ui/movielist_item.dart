@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_event.dart';
 import 'package:movie_viewer_db/view/screens/movie_detail_screen.dart';
 import 'package:movie_viewer_db/view/ui/star_rating.dart';
 
@@ -26,11 +28,15 @@ class MovieItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final movieBloc = BlocProvider.of<MovieBloc>(context);
+    // ignore: close_sinks
+    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
     Size screenSize = MediaQuery.of(context).size;
     final imageHeight = 138.0;
     return GestureDetector(
       key: ValueKey('MovieItem_$movieId'),
       onTap: () {
+        navigationBloc.add(NavigationEvent(
+            pageIndex: navigationBloc.state.pageIndex, bottom: false));
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) {

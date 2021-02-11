@@ -35,7 +35,6 @@ dependencies:
   transparent_image: ^1.0.0
   device_preview: ^0.5.5
   outline_search_bar: ^1.0.2
-  animations: ^1.1.2
 
 dev_dependencies:
   flutter_test:
