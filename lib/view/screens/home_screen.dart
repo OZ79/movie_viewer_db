@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(children: [
-        Stack(children: <Widget>[
+        Stack(clipBehavior: Clip.none, children: <Widget>[
           HeaderBg(animate: _animateBg),
           SizedBox(
               height: Device.get().isPhone ? 300 : 320,

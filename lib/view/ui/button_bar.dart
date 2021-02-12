@@ -50,7 +50,7 @@ class _ButtonAppBarState extends State<ButtonAppBar> {
     final width = MediaQuery.of(context).size.width - 10;
     final btnWidth = getBtnWidth();
 
-    return Stack(children: [
+    return Stack(clipBehavior: Clip.none, children: [
       const Bar(),
       AnimatedPositioned(
         duration: const Duration(milliseconds: 250),

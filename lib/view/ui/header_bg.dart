@@ -29,7 +29,7 @@ class _HeaderBgState extends State<HeaderBg> {
   }
 
   Widget _buildHeadr() {
-    return Stack(children: <Widget>[
+    return Stack(clipBehavior: Clip.none, children: <Widget>[
       ClipPath(
           clipper: WaveClipperOne(),
           child: Container(

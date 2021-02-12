@@ -7,7 +7,7 @@ class LineIndiator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
+    return Stack(clipBehavior: Clip.none, children: <Widget>[
       const IndicatorTrack(),
       AnimatedBuilder(
           animation: controller,

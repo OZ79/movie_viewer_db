@@ -84,7 +84,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
 
               return SingleChildScrollView(
-                child: Stack(children: [
+                child: Stack(clipBehavior: Clip.none, children: [
                   ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height - 40,
@@ -211,7 +211,9 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [HeaderImage(imageUrl), const HeaderGradient()]);
+    return Stack(
+        clipBehavior: Clip.none,
+        children: [HeaderImage(imageUrl), const HeaderGradient()]);
   }
 }
 

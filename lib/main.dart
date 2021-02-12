@@ -64,7 +64,7 @@ class App extends StatelessWidget {
         //builder: DevicePreview.appBuilder,
         //showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
-        //checkerboardRasterCacheImages: false,
+        //checkerboardRasterCacheImages: true,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -120,7 +120,6 @@ class PageAnimation extends StatefulWidget {
 
 class _PageAnimationState extends State<PageAnimation>
     with TickerProviderStateMixin {
-  bool _isInit = true;
   AnimationController _controller;
   Animation<Offset> _animation;
 
@@ -129,9 +128,10 @@ class _PageAnimationState extends State<PageAnimation>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 0),
       vsync: this,
-    );
+    )..forward();
+    _controller.duration = const Duration(milliseconds: 300);
 
     _animation = Tween<Offset>(
       begin: const Offset(0.05, 0.0),
@@ -144,27 +144,18 @@ class _PageAnimationState extends State<PageAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBloc, NavigationState>(buildWhen: (_, state) {
-      if ((widget.key as ValueKey).value == state.pageIndex && state.bottom) {
-        return true;
-      }
-      return false;
-    }, builder: (context, state) {
-      if ((widget.key as ValueKey).value == state.pageIndex &&
-          BlocProvider.of<NavigationBloc>(context).state.bottom) {
-        _controller.reset();
-        _controller.duration = (widget.key as ValueKey).value == 0 && _isInit
-            ? Duration(milliseconds: 0)
-            : Duration(milliseconds: 300);
-        _controller.forward();
-        _isInit = false;
-      }
-
-      return SlideTransition(
-        position: _animation,
-        child: widget.child,
-      );
-    });
+    return BlocListener<NavigationBloc, NavigationState>(
+        listener: (context, state) {
+          if ((widget.key as ValueKey).value == state.pageIndex &&
+              BlocProvider.of<NavigationBloc>(context).state.bottom) {
+            _controller.reset();
+            _controller.forward();
+          }
+        },
+        child: SlideTransition(
+          position: _animation,
+          child: widget.child,
+        ));
   }
 
   @override
