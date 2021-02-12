@@ -13,6 +13,8 @@ class MovieItem extends StatelessWidget {
   final String overview;
   final String imageUrl;
   final double rating;
+  final MovieBloc movieBloc;
+  final NavigationBloc navigationBloc;
 
   const MovieItem(
       {key,
@@ -21,21 +23,19 @@ class MovieItem extends StatelessWidget {
       @required this.releaseDate,
       @required this.overview,
       @required this.imageUrl,
-      @required this.rating})
+      @required this.rating,
+      @required this.movieBloc,
+      @required this.navigationBloc})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final movieBloc = BlocProvider.of<MovieBloc>(context);
-    // ignore: close_sinks
-    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
     Size screenSize = MediaQuery.of(context).size;
     final imageHeight = 138.0;
     return GestureDetector(
       key: ValueKey('MovieItem_$movieId'),
       onTap: () {
-        navigationBloc.add(NavigationEvent(
+        navigationBloc.add(NavigateToEvent(
             pageIndex: navigationBloc.state.pageIndex, bottom: false));
         Navigator.push(
           context,
@@ -153,30 +153,30 @@ double getFontSize(BuildContext context) {
   //print(MediaQuery.of(context).orientation);
 
   if (MediaQuery.of(context).size.aspectRatio > 0.9) {
-    return 20;
+    return 19;
   }
 
   if (screenWidth <= 320) {
-    return 18;
+    return 17;
   }
   if (screenWidth <= 360) {
-    return 20;
+    return 19;
   }
   if (screenWidth <= 411) {
-    return 20;
+    return 19;
   }
   if (screenWidth <= 480) {
-    return 20;
+    return 19;
   }
   if (screenWidth <= 540) {
-    return 24;
+    return 23;
   }
   if (screenWidth <= 768) {
-    return 24;
+    return 23;
   }
   if (screenWidth <= 800) {
-    return 25;
+    return 24;
   }
 
-  return 20;
+  return 19;
 }

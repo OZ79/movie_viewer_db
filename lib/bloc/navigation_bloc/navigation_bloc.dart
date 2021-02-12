@@ -4,15 +4,18 @@ import 'package:bloc/bloc.dart';
 import 'navigation_event.dart';
 import 'navigation_state.dart';
 
-class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
+class NavigationBloc extends Bloc<NavigateToEvent, NavigationState> {
   NavigationBloc() : super(NavigationState(pageIndex: 0));
 
   @override
   Stream<NavigationState> mapEventToState(
-    NavigationEvent event,
+    NavigateToEvent event,
   ) async* {
-    if (event is NavigationEvent) {
-      yield NavigationState(pageIndex: event.pageIndex, bottom: event.bottom);
+    if (event is NavigateToEvent) {
+      yield NavigationState(
+          pageIndex: event.pageIndex,
+          movieType: event.movieType,
+          bottom: event.bottom);
     }
   }
 }

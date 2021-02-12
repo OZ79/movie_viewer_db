@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_event.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_state.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
 import 'package:outline_search_bar/outline_search_bar.dart';
 
@@ -19,6 +21,18 @@ class SearchScreen extends StatefulWidget {
 class _SearchState extends State<SearchScreen> {
   bool _isLoading = false;
   String _query;
+  // ignore: close_sinks
+  MovieBloc _movieBloc;
+  // ignore: close_sinks
+  NavigationBloc _navigationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _movieBloc = BlocProvider.of<MovieBloc>(context);
+    _navigationBloc = BlocProvider.of<NavigationBloc>(context);
+  }
 
   void _loadPage([int page = 1]) {
     if (_isLoading) {
@@ -83,14 +97,15 @@ class _SearchState extends State<SearchScreen> {
                     } else {
                       final movie = state.movies[index];
                       return MovieItem(
-                        key: ValueKey('ss_$index'),
-                        movieId: movie.id,
-                        title: movie.title ?? 'no info',
-                        releaseDate: movie.releaseDate ?? '',
-                        overview: movie.overview ?? 'no info',
-                        imageUrl: "$IMAGE_URL_92${movie.poster}",
-                        rating: movie.rating ?? 0,
-                      );
+                          key: ValueKey('ss_$index'),
+                          movieId: movie.id,
+                          title: movie.title ?? 'no info',
+                          releaseDate: movie.releaseDate ?? '',
+                          overview: movie.overview ?? 'no info',
+                          imageUrl: "$IMAGE_URL_92${movie.poster}",
+                          rating: movie.rating ?? 0,
+                          movieBloc: _movieBloc,
+                          navigationBloc: _navigationBloc);
                     }
                   }),
             );

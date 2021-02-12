@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
 import 'package:movie_viewer_db/view/ui/header_bg.dart';
@@ -20,10 +21,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _animateBg;
+  // ignore: close_sinks
+  MovieBloc _movieBloc;
+  // ignore: close_sinks
+  NavigationBloc _navigationBloc;
 
   @override
   void initState() {
     super.initState();
+
+    _movieBloc = BlocProvider.of<MovieBloc>(context);
+    _navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     if (BlocProvider.of<MovieBloc>(context).state is MovieInitialState) {
       _animateBg = true;
@@ -66,7 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: ValueKey(MovieType.popular),
                 height: 200,
                 child: PreviewMovieList(
-                    "POPULAR", state.movies[MovieType.popular]));
+                    "POPULAR",
+                    state.movies[MovieType.popular],
+                    _movieBloc,
+                    _navigationBloc));
           }
           return Container(
               height: 200,
@@ -86,7 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: ValueKey(MovieType.now_playing),
                 height: 200,
                 child: PreviewMovieList(
-                    "NOW PLAYING", state.movies[MovieType.now_playing]));
+                    "NOW PLAYING",
+                    state.movies[MovieType.now_playing],
+                    _movieBloc,
+                    _navigationBloc));
           }
           return Container(
               height: 200,
@@ -106,7 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: ValueKey(MovieType.upcoming),
                 height: 200,
                 child: PreviewMovieList(
-                    "UPCAMING", state.movies[MovieType.upcoming]));
+                    "UPCAMING",
+                    state.movies[MovieType.upcoming],
+                    _movieBloc,
+                    _navigationBloc));
           }
           return Container(
               height: 200,
@@ -126,7 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: ValueKey(MovieType.top_rated),
                 height: 200,
                 child: PreviewMovieList(
-                    "TOP RATED", state.movies[MovieType.top_rated]));
+                    "TOP RATED",
+                    state.movies[MovieType.top_rated],
+                    _movieBloc,
+                    _navigationBloc));
           }
           return Container(
               height: 200,

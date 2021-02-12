@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
@@ -26,10 +28,17 @@ class _MovieListScreenState extends State<MovieListScreen> {
   bool _isItemSelected = false;
   MovieType _curentMovieType = MovieType.popular;
   Map<MovieType, double> _scrollPosition = {};
+  // ignore: close_sinks
+  MovieBloc _movieBloc;
+  // ignore: close_sinks
+  NavigationBloc _navigationBloc;
 
   @override
   void initState() {
     super.initState();
+
+    _movieBloc = BlocProvider.of<MovieBloc>(context);
+    _navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     if (BlocProvider.of<MovieListBloc>(context).state is MovieInitialState) {
       _loadPage();
@@ -102,6 +111,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       overview: movie.overview ?? 'no info',
                       imageUrl: "$IMAGE_URL_92${movie.poster}",
                       rating: movie.rating ?? 0,
+                      movieBloc: _movieBloc,
+                      navigationBloc: _navigationBloc,
                     );
                   }
                 }),

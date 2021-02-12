@@ -53,7 +53,7 @@ class App extends StatelessWidget {
   void _onItemTapped(BuildContext context, int index) {
     if (index != BlocProvider.of<NavigationBloc>(context).state.pageIndex) {
       BlocProvider.of<NavigationBloc>(context)
-          .add(NavigationEvent(pageIndex: index));
+          .add(NavigateToEvent(pageIndex: index));
     }
   }
 

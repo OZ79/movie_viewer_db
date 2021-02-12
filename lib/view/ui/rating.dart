@@ -20,7 +20,7 @@ class Rating extends StatelessWidget {
       ),
       Text(
         rating.toString(),
-        style: TextStyle(fontSize: 18, color: const Color(0xFF1E88E5)),
+        style: TextStyle(fontSize: 17, color: const Color(0xFF1E88E5)),
       )
     ]);
   }

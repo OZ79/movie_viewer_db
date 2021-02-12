@@ -42,7 +42,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
       label: Text(items[index]['name'],
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 17,
             color: const Color(0xFF1E88E5),
           )),
     );
@@ -58,7 +58,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       backgroundColor: Colors.grey.withOpacity(0.03),
       label: Text(items[index]['name'],
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 17,
             color: const Color(0xFF1E88E5),
           )),
     );
@@ -104,7 +104,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                     child: Rating(movieDetail.rating)),
                                 Text(movieDetail.releaseDate,
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       color: const Color(0xFF1E88E5),
                                     ))
                               ])
@@ -156,7 +156,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                   style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 27,
+                                    fontSize: 23,
                                     color: const Color(0xFF1E88E5),
                                   )),
                               SizedBox(height: 15),
@@ -165,7 +165,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 21,
+                                    fontSize: 20,
                                     color: const Color(0xFF1E88E5)),
                               )
                             ]),
