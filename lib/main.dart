@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,13 +41,9 @@ void main() {
 class App extends StatelessWidget {
   final MovieRepositoryApi movieRepository;
   static final List<Widget> _pages = <Widget>[
-    PageAnimation(
-        key: ValueKey(0), child: HomeScreen(key: ValueKey('HomeScreen'))),
-    PageAnimation(
-        key: ValueKey(1),
-        child: MovieListScreen(key: ValueKey('MovieListScreen'))),
-    PageAnimation(
-        key: ValueKey(2), child: SearchScreen(key: ValueKey('SearchScreen')))
+    HomeScreen(key: ValueKey('HomeScreen')),
+    MovieListScreen(key: ValueKey('MovieListScreen')),
+    SearchScreen(key: ValueKey('SearchScreen'))
   ];
 
   App({Key key, @required this.movieRepository}) : super(key: key);
@@ -62,7 +60,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
-        //showPerformanceOverlay: true,
+        // showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
         //checkerboardRasterCacheImages: true,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -95,11 +93,7 @@ class App extends StatelessWidget {
           body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
               builder: (context, state) {
             if (state is NavigationState) {
-              return IndexedStack(
-                key: ValueKey('IndexedStack'),
-                children: _pages,
-                index: state.pageIndex,
-              );
+              return PageAnimation(child: _pages.elementAt(state.pageIndex));
             }
             return Container();
           })),
@@ -122,6 +116,7 @@ class _PageAnimationState extends State<PageAnimation>
     with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _animation;
+  bool _visible = true;
 
   @override
   void initState() {
@@ -134,28 +129,38 @@ class _PageAnimationState extends State<PageAnimation>
     _controller.duration = const Duration(milliseconds: 300);
 
     _animation = Tween<Offset>(
-      begin: const Offset(0.05, 0.0),
+      begin: const Offset(0.0, 0.05),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.decelerate,
+      curve: Curves.easeOutCubic,
     ));
   }
 
   @override
+  void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (BlocProvider.of<NavigationBloc>(context).state.bottom) {
+      //setState(() => _visible = false);
+      _controller.reset();
+      Future.delayed(Duration(milliseconds: 150), () {
+        //setState(() => _visible = true);
+        _controller.forward();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener<NavigationBloc, NavigationState>(
-        listener: (context, state) {
-          if ((widget.key as ValueKey).value == state.pageIndex &&
-              BlocProvider.of<NavigationBloc>(context).state.bottom) {
-            _controller.reset();
-            _controller.forward();
-          }
-        },
-        child: SlideTransition(
-          position: _animation,
-          child: widget.child,
-        ));
+    return Visibility(
+      visible: _visible,
+      maintainState: true,
+      child: SlideTransition(
+        position: _animation,
+        child: widget.child,
+      ),
+    );
   }
 
   @override

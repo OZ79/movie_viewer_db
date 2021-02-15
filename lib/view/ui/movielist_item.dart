@@ -85,36 +85,18 @@ class MovieItem extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 120,
-                        child: Text.rich(
-                          TextSpan(text: title + '\n', children: <TextSpan>[
-                            TextSpan(
-                              text: releaseDate + '\n',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: getFontSize(context) - 2,
-                              ),
-                            ),
-                            TextSpan(
-                              text: overview,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: getFontSize(context),
-                              ),
-                            ),
-                          ]),
-                          textAlign: TextAlign.justify,
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: screenSize.width > 411 ||
-                                  screenSize.aspectRatio > 0.6
-                              ? 4
-                              : 5,
+                          maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: getFontSize(context) + 1,
                               color: const Color(0xFF1E88E5)),
                         ),
                       ),
-                      /*Text(
+                      Text(
                         releaseDate,
                         textAlign: TextAlign.left,
                         style: TextStyle(
@@ -135,7 +117,7 @@ class MovieItem extends StatelessWidget {
                               fontSize: getFontSize(context),
                               color: const Color(0xFF1E88E5)),
                         ),
-                      ),*/
+                      ),
                       Row(children: [
                         StarRating(
                           rating: rating * 0.5,
