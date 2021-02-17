@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/view/screens/home_screen.dart';
 
 import 'bloc/movie_bloc/movie_bloc.dart';
+import 'bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'bloc/movielist_bloc/movielist_bloc.dart';
 import 'bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'bloc/navigation_bloc/navigation_bloc.dart';
@@ -25,7 +24,7 @@ import 'view/ui/bottom_nav_bar.dart';
 void main() {
   //timeDilation = 5;
   //debugDisableClipLayers = true;
-  Bloc.observer = SimpleBlocObserver();
+  //Bloc.observer = SimpleBlocObserver();
   //HttpOverrides.global = MyHttpOverrides();
   runApp(App(movieRepository: MovieRepository()));
 }
@@ -40,6 +39,7 @@ void main() {
 
 class App extends StatelessWidget {
   final MovieRepositoryApi movieRepository;
+  final PageStorageBucket _bucket = PageStorageBucket();
   static final List<Widget> _pages = <Widget>[
     HomeScreen(key: ValueKey('HomeScreen')),
     MovieListScreen(key: ValueKey('MovieListScreen')),
@@ -60,7 +60,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         //locale: DevicePreview.locale(context),
         //builder: DevicePreview.appBuilder,
-        // showPerformanceOverlay: true,
+        //showPerformanceOverlay: true,
         //debugShowCheckedModeBanner: false,
         //checkerboardRasterCacheImages: true,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -80,6 +80,10 @@ class App extends StatelessWidget {
             create: (context) =>
                 MovieSearchBloc(movieRepository: movieRepository),
           ),
+          BlocProvider<MovieDetailBloc>(
+            create: (context) =>
+                MovieDetailBloc(movieRepository: movieRepository),
+          ),
           BlocProvider<NavigationBloc>(
             create: (context) => NavigationBloc(),
           ),
@@ -90,13 +94,17 @@ class App extends StatelessWidget {
             return AppBottomNavigationBar(
                 (index) => _onItemTapped(context, index));
           }),
-          body: SafeArea(child: BlocBuilder<NavigationBloc, NavigationState>(
-              builder: (context, state) {
-            if (state is NavigationState) {
-              return PageAnimation(child: _pages.elementAt(state.pageIndex));
-            }
-            return Container();
-          })),
+          body: SafeArea(
+              child: PageStorage(
+            bucket: _bucket,
+            child: BlocBuilder<NavigationBloc, NavigationState>(
+                builder: (context, state) {
+              if (state is NavigationState) {
+                return _pages.elementAt(state.pageIndex);
+              }
+              return Container();
+            }),
+          )),
         ),
       ),
     ));
@@ -116,7 +124,6 @@ class _PageAnimationState extends State<PageAnimation>
     with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _animation;
-  bool _visible = true;
 
   @override
   void initState() {
@@ -129,38 +136,28 @@ class _PageAnimationState extends State<PageAnimation>
     _controller.duration = const Duration(milliseconds: 300);
 
     _animation = Tween<Offset>(
-      begin: const Offset(0.0, 0.05),
+      begin: const Offset(0.05, 0.0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeOutCubic,
+      curve: Curves.decelerate,
     ));
   }
 
   @override
-  void didUpdateWidget(Widget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (BlocProvider.of<NavigationBloc>(context).state.bottom) {
-      //setState(() => _visible = false);
-      _controller.reset();
-      Future.delayed(Duration(milliseconds: 150), () {
-        //setState(() => _visible = true);
-        _controller.forward();
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      maintainState: true,
-      child: SlideTransition(
-        position: _animation,
-        child: widget.child,
-      ),
-    );
+    return BlocListener<NavigationBloc, NavigationState>(
+        listener: (context, state) {
+          if ((widget.key as ValueKey).value == state.pageIndex &&
+              BlocProvider.of<NavigationBloc>(context).state.bottom) {
+            _controller.reset();
+            _controller.forward();
+          }
+        },
+        child: SlideTransition(
+          position: _animation,
+          child: widget.child,
+        ));
   }
 
   @override

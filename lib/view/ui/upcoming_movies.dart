@@ -16,6 +16,19 @@ import '../../config.dart';
 class UpcomingMoviesWidget extends StatelessWidget {
   UpcomingMoviesWidget({key}) : super(key: key);
 
+  int getStartIndex(BuildContext context, int length) {
+    int startIndex = PageStorage.of(context)
+        .readState(context, identifier: ValueKey('startIndex'));
+
+    if (startIndex == null) {
+      startIndex = Random().nextInt(length);
+      PageStorage.of(context)
+          .writeState(context, startIndex, identifier: ValueKey('startIndex'));
+    }
+
+    return startIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -30,10 +43,8 @@ class UpcomingMoviesWidget extends StatelessWidget {
           state.movies != null &&
           state.movies[MovieType.upcoming] != null) {
         final movies = state.movies[MovieType.upcoming];
-        final startIndex = 0; //Random().nextInt(movies.length - 6);
-        return MoviePageView(
-            key: ValueKey('MoviePageView'),
-            data: movies.sublist(startIndex, startIndex + 5));
+        final startIndex = getStartIndex(context, movies.length - 6);
+        return MoviePageView(data: movies.sublist(startIndex, startIndex + 5));
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(
@@ -84,7 +95,6 @@ class _MoviePageViewState extends State<MoviePageView> {
           SizedBox(
               height: Device.get().isPhone ? 270 : 290,
               child: PageView.builder(
-                  key: ValueKey('PageView'),
                   controller: _pageController,
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {

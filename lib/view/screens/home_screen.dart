@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _animateBg;
   // ignore: close_sinks
-  MovieBloc _movieBloc;
+  MovieDetailBloc _movieDetailBloc;
   // ignore: close_sinks
   NavigationBloc _navigationBloc;
 
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _movieBloc = BlocProvider.of<MovieBloc>(context);
+    _movieDetailBloc = BlocProvider.of<MovieDetailBloc>(context);
     _navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     if (BlocProvider.of<MovieBloc>(context).state is MovieInitialState) {
@@ -52,13 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      key: PageStorageKey('HomeScreen_SCSV'),
       child: Column(children: [
         Stack(clipBehavior: Clip.none, children: <Widget>[
           HeaderBg(animate: _animateBg),
           SizedBox(
               height: Device.get().isPhone ? 300 : 320,
-              child:
-                  UpcomingMoviesWidget(key: ValueKey('UpcomingMoviesWidget')))
+              child: UpcomingMoviesWidget(
+                  key: PageStorageKey('UpcomingMoviesWidget')))
         ]),
         const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
@@ -71,13 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is PreviewMovieLoadedState &&
               state.movies[MovieType.popular] != null) {
             return Container(
-                key: ValueKey(MovieType.popular),
                 height: 200,
                 child: PreviewMovieList(
-                    "POPULAR",
-                    state.movies[MovieType.popular],
-                    _movieBloc,
-                    _navigationBloc));
+                    key: PageStorageKey(MovieType.popular),
+                    movieType: MovieType.popular,
+                    title: "POPULAR",
+                    data: state.movies[MovieType.popular],
+                    movieDetailBloc: _movieDetailBloc,
+                    navigationBloc: _navigationBloc));
           }
           return Container(
               height: 200,
@@ -94,13 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is PreviewMovieLoadedState &&
               state.movies[MovieType.now_playing] != null) {
             return Container(
-                key: ValueKey(MovieType.now_playing),
                 height: 200,
                 child: PreviewMovieList(
-                    "NOW PLAYING",
-                    state.movies[MovieType.now_playing],
-                    _movieBloc,
-                    _navigationBloc));
+                    key: PageStorageKey(MovieType.now_playing),
+                    movieType: MovieType.now_playing,
+                    title: "NOW PLAYING",
+                    data: state.movies[MovieType.now_playing],
+                    movieDetailBloc: _movieDetailBloc,
+                    navigationBloc: _navigationBloc));
           }
           return Container(
               height: 200,
@@ -117,13 +121,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is PreviewMovieLoadedState &&
               state.movies[MovieType.upcoming] != null) {
             return Container(
-                key: ValueKey(MovieType.upcoming),
                 height: 200,
                 child: PreviewMovieList(
-                    "UPCAMING",
-                    state.movies[MovieType.upcoming],
-                    _movieBloc,
-                    _navigationBloc));
+                    key: PageStorageKey(MovieType.upcoming),
+                    movieType: MovieType.upcoming,
+                    title: "UPCAMING",
+                    data: state.movies[MovieType.upcoming],
+                    movieDetailBloc: _movieDetailBloc,
+                    navigationBloc: _navigationBloc));
           }
           return Container(
               height: 200,
@@ -140,13 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is PreviewMovieLoadedState &&
               state.movies[MovieType.top_rated] != null) {
             return Container(
-                key: ValueKey(MovieType.top_rated),
                 height: 200,
                 child: PreviewMovieList(
-                    "TOP RATED",
-                    state.movies[MovieType.top_rated],
-                    _movieBloc,
-                    _navigationBloc));
+                    key: PageStorageKey(MovieType.top_rated),
+                    movieType: MovieType.top_rated,
+                    title: "TOP RATED",
+                    data: state.movies[MovieType.top_rated],
+                    movieDetailBloc: _movieDetailBloc,
+                    navigationBloc: _navigationBloc));
           }
           return Container(
               height: 200,

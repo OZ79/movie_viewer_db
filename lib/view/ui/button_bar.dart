@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 
 const double HEIGHT_BAR = 50;
 
@@ -23,11 +25,14 @@ class _ButtonAppBarState extends State<ButtonAppBar> {
 
   void onItemSelected(int index) {
     if (_selectedIndex != index) {
-      _selectedColorIndex = -1;
+      selectItem(index);
       widget.onItemSelected(index);
     }
+  }
 
+  void selectItem(int index) {
     _selectedIndex = index;
+    _selectedColorIndex = -1;
     setState(() => _position = _selectedIndex.toDouble() * getBtnWidth());
   }
 

@@ -2,25 +2,33 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_event.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
+import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/screens/movie_detail_screen.dart';
 
 import '../../config.dart';
 import 'star_rating.dart';
 
 class PreviewMovieList extends StatelessWidget {
+  final MovieType movieType;
   final String title;
   final List<Movie> data;
   // ignore: close_sinks
-  final MovieBloc movieBloc;
+  final MovieDetailBloc movieDetailBloc;
   // ignore: close_sinks
   final NavigationBloc navigationBloc;
 
-  const PreviewMovieList(
-      this.title, this.data, this.movieBloc, this.navigationBloc);
+  const PreviewMovieList({
+    Key key,
+    this.movieType,
+    this.title,
+    this.data,
+    this.movieDetailBloc,
+    this.navigationBloc,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +47,8 @@ class PreviewMovieList extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                navigationBloc.add(NavigateToEvent(pageIndex: 1));
+                navigationBloc
+                    .add(NavigateToEvent(pageIndex: 1, movieType: movieType));
               },
               child: const Text(
                 "See more ...",
@@ -53,7 +62,6 @@ class PreviewMovieList extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            key: ValueKey(data),
             scrollDirection: Axis.horizontal,
             itemCount: data.length,
             itemBuilder: (context, index) {
@@ -64,7 +72,7 @@ class PreviewMovieList extends StatelessWidget {
                   title: movie.title,
                   imageUrl: "$IMAGE_URL_92${movie.poster}",
                   rating: movie.rating,
-                  movieBloc: movieBloc,
+                  movieDetailBloc: movieDetailBloc,
                   navigationBloc: navigationBloc);
             },
           ),
@@ -74,13 +82,15 @@ class PreviewMovieList extends StatelessWidget {
   }
 }
 
+class MmovieDetailBloc {}
+
 class MovieItem extends StatelessWidget {
   final int movieId;
   final String title;
   final String imageUrl;
   final double rating;
   // ignore: close_sinks
-  final MovieBloc movieBloc;
+  final MovieDetailBloc movieDetailBloc;
   // ignore: close_sinks
   final NavigationBloc navigationBloc;
 
@@ -90,7 +100,7 @@ class MovieItem extends StatelessWidget {
       @required this.title,
       @required this.imageUrl,
       @required this.rating,
-      @required this.movieBloc,
+      @required this.movieDetailBloc,
       @required this.navigationBloc})
       : super(key: key);
 
@@ -105,7 +115,7 @@ class MovieItem extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (context) {
             return BlocProvider.value(
-              value: movieBloc,
+              value: movieDetailBloc,
               child: MovieDetailScreen(movieId),
             );
           }),

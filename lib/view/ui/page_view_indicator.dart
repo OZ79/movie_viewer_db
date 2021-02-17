@@ -1,19 +1,34 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class LineIndiator extends StatelessWidget {
+class LineIndiator extends StatefulWidget {
   final PageController controller;
 
   LineIndiator({@required this.controller});
+
+  @override
+  _LineIndiatorState createState() => _LineIndiatorState();
+}
+
+class _LineIndiatorState extends State<LineIndiator> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer.run(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(clipBehavior: Clip.none, children: <Widget>[
       const IndicatorTrack(),
       AnimatedBuilder(
-          animation: controller,
+          animation: widget.controller,
           builder: (_, child) {
-            final double offset =
-                34.5 * (controller.page ?? controller.initialPage.toDouble());
+            final double offset = 34.5 *
+                (widget.controller.page ??
+                    widget.controller.initialPage.toDouble());
             return Transform.translate(
               offset: Offset(
                   MediaQuery.of(context).size.width * 0.5 - 80 + offset, 0),

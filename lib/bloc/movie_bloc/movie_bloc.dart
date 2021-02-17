@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
-import 'package:movie_viewer_db/data/models/movie_detail.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 
 import '../base_movie_event.dart';
@@ -34,19 +33,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
         yield PreviewMovieLoadedState(
             movies: prevMovies, movieType: event.movieType);
-      } catch (e) {
-        yield MovieErrorState(message: e.toString());
-      }
-    }
-
-    if (event is FetchMovieDetailEvent) {
-      yield MovieLoadingState();
-      try {
-        MovieDetail movieDetail =
-            await movieRepository.fetchMovieDetail(event.movieId);
-
-        yield MovieDetailLoadedState(
-            movieId: event.movieId, movieDetail: movieDetail);
       } catch (e) {
         yield MovieErrorState(message: e.toString());
       }

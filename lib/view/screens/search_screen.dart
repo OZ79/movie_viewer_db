@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_event.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_state.dart';
@@ -22,7 +22,7 @@ class _SearchState extends State<SearchScreen> {
   bool _isLoading = false;
   String _query;
   // ignore: close_sinks
-  MovieBloc _movieBloc;
+  MovieDetailBloc _movieDetailBloc;
   // ignore: close_sinks
   NavigationBloc _navigationBloc;
 
@@ -30,7 +30,7 @@ class _SearchState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    _movieBloc = BlocProvider.of<MovieBloc>(context);
+    _movieDetailBloc = BlocProvider.of<MovieDetailBloc>(context);
     _navigationBloc = BlocProvider.of<NavigationBloc>(context);
   }
 
@@ -104,7 +104,7 @@ class _SearchState extends State<SearchScreen> {
                           overview: movie.overview ?? 'no info',
                           imageUrl: "$IMAGE_URL_92${movie.poster}",
                           rating: movie.rating ?? 0,
-                          movieBloc: _movieBloc,
+                          movieDetailBloc: _movieDetailBloc,
                           navigationBloc: _navigationBloc);
                     }
                   }),

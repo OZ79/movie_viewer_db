@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_event.dart';
-import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_event.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_state.dart';
 import 'package:movie_viewer_db/util/util.dart';
 import 'package:movie_viewer_db/view/ui/poster.dart';
 import 'package:movie_viewer_db/view/ui/rating.dart';
@@ -30,7 +30,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   void loadData() {
-    BlocProvider.of<MovieBloc>(context)
+    BlocProvider.of<MovieDetailBloc>(context)
       ..add(FetchMovieDetailEvent(movieId: widget.movieId));
     // 675327 , 531219, 777670, 763440, 293863, 615761, 313369, 956, 353081
   }
@@ -50,7 +50,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildCompanyItem(List<dynamic> items, int index) {
     final logoUrl = '$IMAGE_URL_92${items[index]['logo_path']}';
-    return Image.network(logoUrl, width: 65, height: 65, fit: BoxFit.contain);
+    return Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.withOpacity(0.3),
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8)),
+        child:
+            Image.network(logoUrl, width: 65, height: 65, fit: BoxFit.contain));
   }
 
   Widget buildGenreItem(List<dynamic> items, int index) {
@@ -69,16 +78,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: BlocBuilder<MovieBloc, MovieState>(
-          buildWhen: (_, state) {
-            if (state is MovieDetailLoadedState) {
-              return true;
-            }
-            return false;
-          },
+        child: BlocBuilder<MovieDetailBloc, MovieState>(
           builder: (context, state) {
-            if (state is MovieDetailLoadedState &&
-                state.movieId == widget.movieId) {
+            if (state is MovieDetailLoadedState) {
               final movieDetail = state.movieDetail;
               final backPosterUrl = '$IMAGE_URL_500${movieDetail.backPoster}';
               final posterUrl = '$IMAGE_URL_154${movieDetail.poster}';
@@ -118,7 +120,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 child: WrapLayout(
                                     itemCount: movieDetail.prodCountries.length,
                                     direction: Axis.vertical,
-                                    spacing: -3,
+                                    spacing: -5,
                                     itemBuilder: (context, index) {
                                       return buildCountryItem(
                                           movieDetail.prodCountries, index);
@@ -287,7 +289,7 @@ class CastItem extends StatelessWidget {
         SizedBox(height: 6),
         SizedBox(
           width: 90,
-          child: Text(name,
+          child: Text(name == null ? '' : name,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -301,7 +303,7 @@ class CastItem extends StatelessWidget {
         SizedBox(height: 3),
         SizedBox(
           width: 90,
-          child: Text(character,
+          child: Text(character == null ? '' : character,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
