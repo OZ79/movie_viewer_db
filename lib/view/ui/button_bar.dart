@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 
 const double HEIGHT_BAR = 50;
 
 class ButtonAppBar extends StatefulWidget {
+  final int selectedIndex;
   final ValueChanged<int> onItemSelected;
 
-  ButtonAppBar(this.onItemSelected);
+  ButtonAppBar(this.onItemSelected, {this.selectedIndex});
 
   @override
   _ButtonAppBarState createState() => _ButtonAppBarState();
@@ -17,10 +16,24 @@ class _ButtonAppBarState extends State<ButtonAppBar> {
   double _position = 0;
   int _selectedIndex = 0;
   int _selectedColorIndex = 0;
+  bool _init = true;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_init && widget.selectedIndex != null) {
+      _selectedIndex = widget.selectedIndex;
+      _position = _selectedIndex.toDouble() * getBtnWidth();
+      _selectedColorIndex = _selectedIndex;
+      widget.onItemSelected(_selectedIndex);
+      _init = false;
+    }
   }
 
   void onItemSelected(int index) {
@@ -54,6 +67,7 @@ class _ButtonAppBarState extends State<ButtonAppBar> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width - 10;
     final btnWidth = getBtnWidth();
+    _position = _selectedIndex.toDouble() * btnWidth;
 
     return Stack(clipBehavior: Clip.none, children: [
       const Bar(),
@@ -162,6 +176,8 @@ class ButtonSelector extends StatelessWidget {
 double getFontSize(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
 
+  if (MediaQuery.of(context).size.aspectRatio > 1) {}
+
   if (screenWidth <= 320) {
     return 12.9;
   }
@@ -175,14 +191,14 @@ double getFontSize(BuildContext context) {
     return 14;
   }
   if (screenWidth <= 540) {
-    return 20;
+    return 18;
   }
   if (screenWidth <= 768) {
-    return 24;
+    return 20;
   }
   if (screenWidth <= 800) {
-    return 26;
+    return 23;
   }
 
-  return 27;
+  return 24;
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +7,7 @@ import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_bloc.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_event.dart';
 import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movie_viewer_db/data/PageStorageIndetifier.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
@@ -25,9 +24,8 @@ class MovieListScreen extends StatefulWidget {
 class _MovieListScreenState extends State<MovieListScreen> {
   ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
-  bool _isItemSelected = false;
-  MovieType _curentMovieType = MovieType.popular;
-  Map<MovieType, double> _scrollPosition = {};
+  //bool _isItemSelected = false;
+  MovieType _curentMovieType;
   // ignore: close_sinks
   MovieDetailBloc _movieDetailBloc;
   // ignore: close_sinks
@@ -39,6 +37,15 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
     _movieDetailBloc = BlocProvider.of<MovieDetailBloc>(context);
     _navigationBloc = BlocProvider.of<NavigationBloc>(context);
+
+    final movieType = BlocProvider.of<NavigationBloc>(context).state.movieType;
+    if (movieType == MovieType.none) {
+      _curentMovieType = PageStorage.of(context).readState(context,
+              identifier: PageStorageIndetifier.curentMovieType) ??
+          MovieType.popular;
+    } else {
+      _curentMovieType = movieType;
+    }
 
     if (BlocProvider.of<MovieListBloc>(context).state is MovieInitialState) {
       _loadPage();
@@ -56,42 +63,28 @@ class _MovieListScreenState extends State<MovieListScreen> {
   }
 
   void _onItemSelected(int index) {
-    if (_scrollController.hasClients) {
-      _scrollPosition[_curentMovieType] = _scrollController.position.pixels;
-    }
-
     _curentMovieType = mapIndexToMovieType(index);
     _isLoading = false;
-    _isItemSelected = true;
 
     _loadPage();
-  }
 
-  void _jumpTo() {
-    if (_scrollController.hasClients && _isItemSelected) {
-      _isItemSelected = false;
-      _scrollController.jumpTo(_scrollPosition[_curentMovieType] ?? 0.0);
-    }
+    PageStorage.of(context).writeState(context, _curentMovieType,
+        identifier: PageStorageIndetifier.curentMovieType);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       const SizedBox(height: 15),
-      ButtonAppBar(_onItemSelected),
+      ButtonAppBar(_onItemSelected,
+          selectedIndex: mapMovieTypeToIndex(_curentMovieType)),
       const SizedBox(height: 15),
       BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
         if (state is MovieListPagesLoadedState) {
-          if (_scrollController.hasClients) {
-            _jumpTo();
-          } else {
-            Timer.run(() => _jumpTo());
-          }
-
           _isLoading = false;
           return Expanded(
             child: ListView.builder(
-                key: ValueKey('ms_ListView'),
+                key: PageStorageKey('ms_ListView_$_curentMovieType'),
                 controller: _scrollController,
                 itemExtent: 138,
                 itemCount: state.hasReachedMax
@@ -147,5 +140,24 @@ MovieType mapIndexToMovieType(int index) {
       break;
     default:
       return MovieType.popular;
+  }
+}
+
+int mapMovieTypeToIndex(MovieType type) {
+  switch (type) {
+    case MovieType.popular:
+      return 0;
+      break;
+    case MovieType.now_playing:
+      return 1;
+      break;
+    case MovieType.upcoming:
+      return 2;
+      break;
+    case MovieType.top_rated:
+      return 3;
+      break;
+    default:
+      return 0;
   }
 }

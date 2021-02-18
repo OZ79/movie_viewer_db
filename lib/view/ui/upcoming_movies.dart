@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/data/PageStorageIndetifier.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
@@ -18,12 +19,12 @@ class UpcomingMoviesWidget extends StatelessWidget {
 
   int getStartIndex(BuildContext context, int length) {
     int startIndex = PageStorage.of(context)
-        .readState(context, identifier: ValueKey('startIndex'));
+        .readState(context, identifier: PageStorageIndetifier.startIndex);
 
     if (startIndex == null) {
       startIndex = Random().nextInt(length);
-      PageStorage.of(context)
-          .writeState(context, startIndex, identifier: ValueKey('startIndex'));
+      PageStorage.of(context).writeState(context, startIndex,
+          identifier: PageStorageIndetifier.startIndex);
     }
 
     return startIndex;

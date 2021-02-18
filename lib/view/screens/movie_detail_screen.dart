@@ -32,7 +32,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   void loadData() {
     BlocProvider.of<MovieDetailBloc>(context)
       ..add(FetchMovieDetailEvent(movieId: widget.movieId));
-    // 675327 , 531219, 777670, 763440, 293863, 615761, 313369, 956, 353081
   }
 
   Widget buildCountryItem(List<dynamic> items, int index) {
@@ -51,15 +50,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget buildCompanyItem(List<dynamic> items, int index) {
     final logoUrl = '$IMAGE_URL_92${items[index]['logo_path']}';
     return Container(
-        padding: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.grey.withOpacity(0.3),
-              width: 3,
+              color: Colors.grey.withOpacity(0.27),
+              width: 2,
             ),
             borderRadius: BorderRadius.circular(8)),
         child:
-            Image.network(logoUrl, width: 65, height: 65, fit: BoxFit.contain));
+            Image.network(logoUrl, width: 59, height: 59, fit: BoxFit.contain));
   }
 
   Widget buildGenreItem(List<dynamic> items, int index) {
@@ -92,7 +91,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       minHeight: MediaQuery.of(context).size.height - 40,
                     ),
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Column(children: [
@@ -120,7 +119,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 child: WrapLayout(
                                     itemCount: movieDetail.prodCountries.length,
                                     direction: Axis.vertical,
-                                    spacing: -5,
+                                    spacing: -7,
                                     itemBuilder: (context, index) {
                                       return buildCountryItem(
                                           movieDetail.prodCountries, index);
@@ -131,7 +130,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               child: WrapLayout(
                                   itemCount: movieDetail.prodCompanies.length,
                                   alignment: WrapAlignment.center,
-                                  spacing: 40,
+                                  spacing: 12,
                                   runSpacing: 5,
                                   itemBuilder: (context, index) {
                                     return buildCompanyItem(
@@ -143,7 +142,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               child: WrapLayout(
                                   itemCount: movieDetail.genres.length,
                                   alignment: WrapAlignment.center,
-                                  spacing: 15,
+                                  spacing: 12,
+                                  runSpacing: -5,
                                   itemBuilder: (context, index) {
                                     return buildGenreItem(
                                         movieDetail.genres, index);
@@ -192,7 +192,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             ),
                         ]),
                   ),
-                  Poster(posterUrl: posterUrl)
+                  Container(
+                    margin: const EdgeInsets.only(left: 8, top: 8),
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black.withOpacity(0.15)),
+                    child: const BackButton(color: Colors.white),
+                  ),
+                  Poster(posterUrl: posterUrl),
                 ]),
               );
             }
