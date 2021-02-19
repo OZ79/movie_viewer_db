@@ -7,11 +7,13 @@ class MovieListPagesBySearchLoadedState extends MovieLoadedState {
   final List<Movie> movies;
   final int pages;
   final int totalPages;
+  final String query;
 
   const MovieListPagesBySearchLoadedState({
     @required this.movies,
     @required this.pages,
     @required this.totalPages,
+    this.query = '',
     movieType = MovieType.none,
   }) : super(
           movieType: movieType,

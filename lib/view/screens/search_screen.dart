@@ -19,6 +19,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchState extends State<SearchScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final _textController = TextEditingController();
   bool _isLoading = false;
   String _query;
   // ignore: close_sinks
@@ -32,6 +34,14 @@ class _SearchState extends State<SearchScreen> {
 
     _movieDetailBloc = BlocProvider.of<MovieDetailBloc>(context);
     _navigationBloc = BlocProvider.of<NavigationBloc>(context);
+
+    if (BlocProvider.of<MovieSearchBloc>(context).state
+        is MovieListPagesBySearchLoadedState) {
+      _query = (BlocProvider.of<MovieSearchBloc>(context).state
+              as MovieListPagesBySearchLoadedState)
+          .query;
+      _textController.text = _query;
+    }
   }
 
   void _loadPage([int page = 1]) {
@@ -49,22 +59,30 @@ class _SearchState extends State<SearchScreen> {
       return;
     }
     _query = value;
+
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+
     _loadPage();
+  }
+
+  void dispose() {
+    _scrollController.dispose();
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      key: ValueKey('ss_GestureDetector'),
       behavior: HitTestBehavior.opaque,
-      //splashColor: Colors.transparent,
-      //highlightColor: Colors.transparent,
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Column(children: [
         OutlineSearchBar(
-          key: ValueKey('ss_OutlineSearchBar'),
+          textEditingController: _textController,
           margin: const EdgeInsets.all(5),
           hintText: 'Search',
           borderRadius: BorderRadius.circular(15),
@@ -85,7 +103,8 @@ class _SearchState extends State<SearchScreen> {
 
             return Expanded(
               child: ListView.builder(
-                  key: ValueKey('ss_ListView'),
+                  controller: _scrollController,
+                  key: PageStorageKey('ss_ListView'),
                   itemExtent: 138,
                   itemCount: state.hasReachedMax
                       ? state.movies.length

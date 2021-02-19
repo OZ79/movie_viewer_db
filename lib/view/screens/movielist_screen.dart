@@ -22,7 +22,6 @@ class MovieListScreen extends StatefulWidget {
 }
 
 class _MovieListScreenState extends State<MovieListScreen> {
-  ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   //bool _isItemSelected = false;
   MovieType _curentMovieType;
@@ -85,7 +84,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
           return Expanded(
             child: ListView.builder(
                 key: PageStorageKey('ms_ListView_$_curentMovieType'),
-                controller: _scrollController,
                 itemExtent: 138,
                 itemCount: state.hasReachedMax
                     ? state.movies.length
@@ -115,12 +113,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
             child: const Center(child: const CircularProgressIndicator()));
       }),
     ]);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
 

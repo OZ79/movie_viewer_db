@@ -39,20 +39,14 @@ class MovieSearchBloc extends Bloc<MovieEvent, MovieState> {
         }
 
         yield MovieListPagesBySearchLoadedState(
-          movies: movies,
-          pages: moviePage.page,
-          totalPages: moviePage.totalPages,
-        );
+            movies: movies,
+            pages: moviePage.page,
+            totalPages: moviePage.totalPages,
+            query: event.query);
       } catch (e) {
         print(e.toString());
         yield MovieErrorState(message: e.toString());
       }
     }
   }
-
-  /*@override
-  Stream<Transition<MovieEvent, MovieState>> transformEvents(
-      Stream<MovieEvent> events, transitionFn) {
-    return events.switchMap(transitionFn);
-  }*/
 }

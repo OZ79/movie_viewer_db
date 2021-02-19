@@ -176,8 +176,6 @@ class ButtonSelector extends StatelessWidget {
 double getFontSize(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
 
-  if (MediaQuery.of(context).size.aspectRatio > 1) {}
-
   if (screenWidth <= 320) {
     return 12.9;
   }
