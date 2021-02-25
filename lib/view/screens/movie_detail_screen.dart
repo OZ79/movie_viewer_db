@@ -58,7 +58,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             ),
             borderRadius: BorderRadius.circular(8)),
         child:
-            Image.network(logoUrl, width: 59, height: 59, fit: BoxFit.contain));
+            Image.network(logoUrl, width: 47, height: 47, fit: BoxFit.contain));
   }
 
   Widget buildGenreItem(List<dynamic> items, int index) {
@@ -113,13 +113,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           ]),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 12, top: 15, bottom: 20),
+                                left: 12, right: 12, top: 15, bottom: 20),
                             child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: WrapLayout(
                                     itemCount: movieDetail.prodCountries.length,
-                                    direction: Axis.vertical,
-                                    spacing: -7,
+                                    spacing: 12,
+                                    runSpacing: -5,
                                     itemBuilder: (context, index) {
                                       return buildCountryItem(
                                           movieDetail.prodCountries, index);
@@ -198,7 +198,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.black.withOpacity(0.15)),
+                        color: Colors.black.withOpacity(0.2)),
                     child: const BackButton(color: Colors.white),
                   ),
                   Poster(posterUrl: posterUrl),

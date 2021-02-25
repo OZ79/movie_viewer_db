@@ -18,8 +18,6 @@ class MovieLoadingState extends MovieState {
 }
 
 class MovieLoadedState extends MovieState {
-  //final List<Movie> movies;
-  //final Map<MovieType, List<Movie>> movies = {};
   final MovieType movieType;
 
   const MovieLoadedState({this.movieType = MovieType.none});

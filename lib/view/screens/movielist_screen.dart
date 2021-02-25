@@ -80,34 +80,37 @@ class _MovieListScreenState extends State<MovieListScreen> {
       const SizedBox(height: 15),
       BlocBuilder<MovieListBloc, MovieState>(builder: (context, state) {
         if (state is MovieListPagesLoadedState) {
-          _isLoading = false;
-          return Expanded(
-            child: ListView.builder(
-                key: PageStorageKey('ms_ListView_$_curentMovieType'),
-                itemExtent: 138,
-                itemCount: state.hasReachedMax
-                    ? state.movies.length
-                    : state.movies.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index >= state.movies.length) {
-                    _loadPage(state.pages + 1);
-                    return Center(child: const CircularProgressIndicator());
-                  } else {
-                    final movie = state.movies[index];
-                    return MovieItem(
-                      key: ValueKey('ms_MovieItem_$index'),
-                      movieId: movie.id,
-                      title: movie.title ?? 'no info',
-                      releaseDate: movie.releaseDate ?? '',
-                      overview: movie.overview ?? 'no info',
-                      imageUrl: "$IMAGE_URL_92${movie.poster}",
-                      rating: movie.rating ?? 0,
-                      movieDetailBloc: _movieDetailBloc,
-                      navigationBloc: _navigationBloc,
-                    );
-                  }
-                }),
-          );
+          if (state.movieType == _curentMovieType) {
+            _isLoading = false;
+            return Expanded(
+              child: ListView.builder(
+                  key: PageStorageKey('ms_ListView_$_curentMovieType'),
+                  itemExtent: 138,
+                  itemCount: state.hasReachedMax
+                      ? state.movies.length
+                      : state.movies.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index >= state.movies.length) {
+                      _loadPage(state.pages + 1);
+                      return Center(child: const CircularProgressIndicator());
+                    } else {
+                      final movie = state.movies[index];
+                      return MovieItem(
+                        key:
+                            ValueKey('ms_MovieItem_${_curentMovieType}_$index'),
+                        movieId: movie.id,
+                        title: movie.title ?? 'no info',
+                        releaseDate: movie.releaseDate ?? '',
+                        overview: movie.overview ?? 'no info',
+                        imageUrl: "$IMAGE_URL_92${movie.poster}",
+                        rating: movie.rating ?? 0,
+                        movieDetailBloc: _movieDetailBloc,
+                        navigationBloc: _navigationBloc,
+                      );
+                    }
+                  }),
+            );
+          }
         }
         return Expanded(
             child: const Center(child: const CircularProgressIndicator()));

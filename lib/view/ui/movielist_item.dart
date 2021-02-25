@@ -77,7 +77,6 @@ class MovieItem extends StatelessWidget {
                           : const Icon(Icons.movie))),
               const SizedBox(width: 8),
               Container(
-                //color: Colors.yellow,
                 height: imageHeight,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
