@@ -40,6 +40,7 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
         } else {
           moviePage =
               await movieRepository.fetchMoviePage(event.movieType, event.page);
+
           movies = List.from((state as MovieListPagesLoadedState).movies);
           movies.addAll(moviePage.movies);
           DataCache.addMoviePage(event.movieType, moviePage);
@@ -51,8 +52,12 @@ class MovieListBloc extends Bloc<MovieEvent, MovieState> {
             totalPages: moviePage.totalPages,
             movieType: event.movieType);
       } catch (e) {
-        print(e.toString());
-        yield MovieErrorState(message: e.toString());
+        print(e);
+
+        yield MovieErrorState(
+            exception: e,
+            event:
+                FetchMovieListPageEvent(movieType: event.movieType, page: 1));
       }
     }
   }

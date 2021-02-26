@@ -38,11 +38,15 @@ class MovieRepository implements MovieRepositoryApi {
         '/3/movie/${movieType.toString().split('.').last}',
         {'api_key': API_KEY, 'language': 'en-US', 'page': "1"});
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      return compute(_parseMovie, response.body);
-    } else {
-      throw Exception();
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return compute(_parseMovie, response.body);
+      } else {
+        throw Exception('Failed to load');
+      }
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -58,10 +62,10 @@ class MovieRepository implements MovieRepositoryApi {
       if (response.statusCode == 200) {
         return compute(_parseMoviePages, response.body);
       } else {
-        throw Exception();
+        throw Exception('Failed to load');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw e;
     }
   }
 
@@ -79,10 +83,10 @@ class MovieRepository implements MovieRepositoryApi {
       if (response.statusCode == 200) {
         return compute(_parseMoviePages, response.body);
       } else {
-        throw Exception();
+        throw Exception('Failed to load');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw e;
     }
   }
 
@@ -98,10 +102,10 @@ class MovieRepository implements MovieRepositoryApi {
       if (response.statusCode == 200) {
         return compute(_parseMovieDetail, response.body);
       } else {
-        throw Exception();
+        throw Exception('Failed to load');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw e;
     }
   }
 }

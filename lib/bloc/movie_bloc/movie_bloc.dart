@@ -12,29 +12,26 @@ import 'movie_state.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final MovieRepositoryApi movieRepository;
+  Map<MovieType, List<Movie>> _movies = {};
 
   MovieBloc({@required this.movieRepository}) : super(MovieInitialState());
 
   @override
   Stream<MovieState> mapEventToState(MovieEvent event) async* {
-    Map<MovieType, List<Movie>> prevMovies;
     if (state is PreviewMovieLoadedState) {
-      prevMovies = (state as PreviewMovieLoadedState).movies;
+      _movies = (state as PreviewMovieLoadedState).movies;
     }
 
     if (event is FetchPreviewMovieEvent) {
       try {
         List<Movie> movies = await movieRepository.fetchMovies(event.movieType);
-
-        if (prevMovies == null) {
-          prevMovies = {};
-        }
-        prevMovies[event.movieType] = movies;
+        _movies[event.movieType] = movies;
 
         yield PreviewMovieLoadedState(
-            movies: prevMovies, movieType: event.movieType);
+            movies: _movies, movieType: event.movieType);
       } catch (e) {
-        yield MovieErrorState(message: e.toString());
+        print(e);
+        yield MovieErrorState(exception: e, event: event);
       }
     }
   }

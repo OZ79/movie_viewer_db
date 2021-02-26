@@ -5,6 +5,7 @@ import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_event.dart';
 import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_state.dart';
 import 'package:movie_viewer_db/util/util.dart';
+import 'package:movie_viewer_db/view/ui/InternetConnectionAlert.dart';
 import 'package:movie_viewer_db/view/ui/poster.dart';
 import 'package:movie_viewer_db/view/ui/rating.dart';
 import 'package:movie_viewer_db/view/ui/wrap_layout.dart';
@@ -21,7 +22,8 @@ class MovieDetailScreen extends StatefulWidget {
   _MovieDetailScreenState createState() => _MovieDetailScreenState();
 }
 
-class _MovieDetailScreenState extends State<MovieDetailScreen> {
+class _MovieDetailScreenState extends State<MovieDetailScreen>
+    with InternetConnectionAlert<MovieDetailScreen, MovieDetailBloc> {
   @override
   void initState() {
     super.initState();
@@ -73,7 +75,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  MovieDetailBloc get bloc => BlocProvider.of<MovieDetailBloc>(context);
+
+  @override
+  Widget getContent() {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -212,6 +217,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return super.build(context);
   }
 }
 

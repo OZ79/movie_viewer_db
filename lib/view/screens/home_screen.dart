@@ -9,6 +9,7 @@ import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
+import 'package:movie_viewer_db/view/ui/InternetConnectionAlert.dart';
 import 'package:movie_viewer_db/view/ui/header_bg.dart';
 import 'package:movie_viewer_db/view/ui/preview_movielist.dart';
 import 'package:movie_viewer_db/view/ui/upcoming_movies.dart';
@@ -20,7 +21,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with InternetConnectionAlert<HomeScreen, MovieBloc> {
   bool _animateBg;
   // ignore: close_sinks
   MovieDetailBloc _movieDetailBloc;
@@ -51,7 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  MovieBloc get bloc => BlocProvider.of<MovieBloc>(context);
+
+  @override
+  Widget getContent() {
     return SingleChildScrollView(
       key: PageStorageKey('HomeScreen_SCSV'),
       child: Column(children: [
@@ -63,7 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   key: PageStorageKey('UpcomingMoviesWidget')))
         ]),
         const SizedBox(height: 20),
-        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {
+          if (prevstate is MovieErrorState && prevstate.isOffline) {
+            return true;
+          }
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.popular) {
             return true;
@@ -87,7 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {
+          if (prevstate is MovieErrorState && prevstate.isOffline) {
+            return true;
+          }
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.now_playing) {
             return true;
@@ -111,7 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {
+          if (prevstate is MovieErrorState && prevstate.isOffline) {
+            return true;
+          }
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.upcoming) {
             return true;
@@ -135,7 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Center(child: const CircularProgressIndicator()));
         }),
         const SizedBox(height: 20),
-        BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+        BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {
+          if (prevstate is MovieErrorState && prevstate.isOffline) {
+            return true;
+          }
           if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.top_rated) {
             return true;
@@ -160,5 +177,10 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
       ]),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return super.build(context);
   }
 }

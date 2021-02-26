@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
@@ -6,6 +8,7 @@ import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_event.dart';
 import 'package:movie_viewer_db/bloc/moviesearch_bloc/moviesearch_state.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movie_viewer_db/view/ui/InternetConnectionAlert.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
 import 'package:outline_search_bar/outline_search_bar.dart';
 
@@ -18,7 +21,8 @@ class SearchScreen extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<SearchScreen> {
+class _SearchState extends State<SearchScreen>
+    with InternetConnectionAlert<SearchScreen, MovieSearchBloc> {
   final ScrollController _scrollController = ScrollController();
   final _textController = TextEditingController();
   bool _isLoading = false;
@@ -67,14 +71,18 @@ class _SearchState extends State<SearchScreen> {
     _loadPage();
   }
 
-  void dispose() {
-    _scrollController.dispose();
-    _textController.dispose();
-    super.dispose();
+  @override
+  MovieSearchBloc get bloc => BlocProvider.of<MovieSearchBloc>(context);
+
+  @override
+  void doActionBeforeCloseDialog() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget getContent() {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -90,7 +98,14 @@ class _SearchState extends State<SearchScreen> {
           textStyle: const TextStyle(fontSize: 20),
           onSearchButtonPressed: onSearchButtonPressed,
         ),
-        BlocBuilder<MovieSearchBloc, MovieState>(builder: (context, state) {
+        BlocBuilder<MovieSearchBloc, MovieState>(buildWhen: (_, state) {
+          if (state is MovieErrorState &&
+              state.exception is SocketException &&
+              (state.exception as SocketException)?.osError?.errorCode == 7) {
+            return false;
+          }
+          return true;
+        }, builder: (context, state) {
           if (state is MovieListPagesBySearchLoadedState) {
             _isLoading = false;
 
@@ -150,5 +165,16 @@ class _SearchState extends State<SearchScreen> {
         }),
       ]),
     );
+  }
+
+  void dispose() {
+    _scrollController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return super.build(context);
   }
 }

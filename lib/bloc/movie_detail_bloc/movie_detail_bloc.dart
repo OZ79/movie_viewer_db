@@ -28,7 +28,7 @@ class MovieDetailBloc extends Bloc<MovieEvent, MovieState> {
         yield MovieDetailLoadedState(
             movieId: event.movieId, movieDetail: movieDetail);
       } catch (e) {
-        yield MovieErrorState(message: e.toString());
+        yield MovieErrorState(exception: e, event: event);
       }
     }
   }

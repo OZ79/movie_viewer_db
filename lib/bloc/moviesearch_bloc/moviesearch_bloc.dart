@@ -45,7 +45,11 @@ class MovieSearchBloc extends Bloc<MovieEvent, MovieState> {
             query: event.query);
       } catch (e) {
         print(e.toString());
-        yield MovieErrorState(message: e.toString());
+
+        yield MovieErrorState(
+            exception: e,
+            event:
+                FetchMovieListPageBySearchEvent(query: event.query, page: 1));
       }
     }
   }

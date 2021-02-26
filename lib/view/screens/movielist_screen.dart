@@ -9,6 +9,7 @@ import 'package:movie_viewer_db/bloc/movielist_bloc/movielist_state.dart';
 import 'package:movie_viewer_db/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movie_viewer_db/data/PageStorageIndetifier.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
+import 'package:movie_viewer_db/view/ui/InternetConnectionAlert.dart';
 import 'package:movie_viewer_db/view/ui/button_bar.dart';
 import 'package:movie_viewer_db/view/ui/movielist_item.dart';
 
@@ -21,7 +22,8 @@ class MovieListScreen extends StatefulWidget {
   _MovieListScreenState createState() => _MovieListScreenState();
 }
 
-class _MovieListScreenState extends State<MovieListScreen> {
+class _MovieListScreenState extends State<MovieListScreen>
+    with InternetConnectionAlert<MovieListScreen, MovieListBloc> {
   bool _isLoading = false;
   //bool _isItemSelected = false;
   MovieType _curentMovieType;
@@ -72,7 +74,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  MovieListBloc get bloc => BlocProvider.of<MovieListBloc>(context);
+
+  @override
+  Widget getContent() {
     return Column(children: [
       const SizedBox(height: 15),
       ButtonAppBar(_onItemSelected,
@@ -116,6 +121,11 @@ class _MovieListScreenState extends State<MovieListScreen> {
             child: const Center(child: const CircularProgressIndicator()));
       }),
     ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return super.build(context);
   }
 }
 

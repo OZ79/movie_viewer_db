@@ -32,7 +32,10 @@ class UpcomingMoviesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(buildWhen: (_, state) {
+    return BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {
+      if (prevstate is MovieErrorState && prevstate.isOffline) {
+        return true;
+      }
       if (state is PreviewMovieLoadedState &&
               state.movieType == MovieType.upcoming ||
           state is MovieErrorState) {
@@ -49,7 +52,7 @@ class UpcomingMoviesWidget extends StatelessWidget {
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(
-            state.message,
+            state.exception.toString(),
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 18, color: Colors.black54),
           ),
