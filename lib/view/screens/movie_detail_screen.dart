@@ -60,7 +60,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
             ),
             borderRadius: BorderRadius.circular(8)),
         child:
-            Image.network(logoUrl, width: 47, height: 47, fit: BoxFit.contain));
+            Image.network(logoUrl, width: 43, height: 43, fit: BoxFit.contain));
   }
 
   Widget buildGenreItem(List<dynamic> items, int index) {
@@ -116,43 +116,47 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                               ])
                             ])
                           ]),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 12, right: 12, top: 15, bottom: 20),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
+                          if (movieDetail.prodCountries.length != 0)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12, right: 12, top: 15, bottom: 20),
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: WrapLayout(
+                                      itemCount:
+                                          movieDetail.prodCountries.length,
+                                      spacing: 12,
+                                      runSpacing: -5,
+                                      itemBuilder: (context, index) {
+                                        return buildCountryItem(
+                                            movieDetail.prodCountries, index);
+                                      })),
+                            ),
+                          if (movieDetail.prodCompanies.length != 0)
+                            Padding(
+                                padding: EdgeInsets.only(left: 12, right: 12),
                                 child: WrapLayout(
-                                    itemCount: movieDetail.prodCountries.length,
+                                    itemCount: movieDetail.prodCompanies.length,
+                                    alignment: WrapAlignment.center,
+                                    spacing: 12,
+                                    runSpacing: 5,
+                                    itemBuilder: (context, index) {
+                                      return buildCompanyItem(
+                                          movieDetail.prodCompanies, index);
+                                    })),
+                          if (movieDetail.genres.length != 0)
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, bottom: 20, left: 12, right: 12),
+                                child: WrapLayout(
+                                    itemCount: movieDetail.genres.length,
+                                    alignment: WrapAlignment.center,
                                     spacing: 12,
                                     runSpacing: -5,
                                     itemBuilder: (context, index) {
-                                      return buildCountryItem(
-                                          movieDetail.prodCountries, index);
+                                      return buildGenreItem(
+                                          movieDetail.genres, index);
                                     })),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(left: 12, right: 12),
-                              child: WrapLayout(
-                                  itemCount: movieDetail.prodCompanies.length,
-                                  alignment: WrapAlignment.center,
-                                  spacing: 12,
-                                  runSpacing: 5,
-                                  itemBuilder: (context, index) {
-                                    return buildCompanyItem(
-                                        movieDetail.prodCompanies, index);
-                                  })),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20, bottom: 20, left: 12, right: 12),
-                              child: WrapLayout(
-                                  itemCount: movieDetail.genres.length,
-                                  alignment: WrapAlignment.center,
-                                  spacing: 12,
-                                  runSpacing: -5,
-                                  itemBuilder: (context, index) {
-                                    return buildGenreItem(
-                                        movieDetail.genres, index);
-                                  })),
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(children: [
@@ -197,6 +201,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                             ),
                         ]),
                   ),
+                  Poster(posterUrl: posterUrl),
                   Container(
                     margin: const EdgeInsets.only(left: 8, top: 8),
                     width: 40,
@@ -205,8 +210,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                         shape: BoxShape.circle,
                         color: Colors.black.withOpacity(0.2)),
                     child: const BackButton(color: Colors.white),
-                  ),
-                  Poster(posterUrl: posterUrl),
+                  )
                 ]),
               );
             }

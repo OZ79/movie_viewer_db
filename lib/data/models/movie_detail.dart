@@ -36,6 +36,7 @@ class MovieDetail {
         casts = List<Cast>.from(
             json['credits']['cast'].map((json) => Cast.fromJson(json))) {
     prodCompanies.removeWhere((element) => element['logo_path'] == null);
+    prodCountries.removeWhere((element) => element['iso_3166_1'] == null);
     casts.removeWhere((element) => element.profilePath == null);
   }
 }

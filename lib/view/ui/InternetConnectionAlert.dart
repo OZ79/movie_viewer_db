@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +25,12 @@ mixin InternetConnectionAlert<T extends StatefulWidget,
         },
         listener: (context, state) {
           if (!isDialogOpened) {
-            _showMaterialDialog();
+            if (Platform.isAndroid) {
+              _showMaterialDialog();
+            } else if (Platform.isIOS) {
+              _showCupertinoDialog();
+            }
+
             isDialogOpened = true;
           }
           events.add((state as MovieErrorState).event);
@@ -35,12 +43,58 @@ mixin InternetConnectionAlert<T extends StatefulWidget,
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return new AlertDialog(
-            title: new Text("Material Dialog"),
-            content: new Text("Hey! I'm Coflutter!"),
+          return AlertDialog(
+            title: const Text("Offline"),
+            content: Row(children: [
+              const Icon(Icons.cloud_off, size: 40, color: Colors.blue),
+              const SizedBox(width: 10),
+              const Flexible(
+                child: const FractionallySizedBox(
+                  child: const Text(
+                      "Your network is unavailable. Check your data or wifi connection."),
+                ),
+              )
+            ]),
             actions: <Widget>[
               FlatButton(
-                child: Text('Close me!'),
+                child: Text('RETRY'),
+                onPressed: () {
+                  doActionBeforeCloseDialog();
+                  Navigator.of(context).pop();
+                  isDialogOpened = false;
+                  Future.delayed(Duration(milliseconds: 50), () {
+                    events.forEach((event) {
+                      bloc.add(event);
+                    });
+                    events.clear();
+                  });
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  _showCupertinoDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: const Text("Offline"),
+            content: Row(children: [
+              const Icon(Icons.cloud_off, size: 40, color: Colors.blue),
+              const SizedBox(width: 10),
+              const Flexible(
+                child: const FractionallySizedBox(
+                  child: const Text(
+                      "Your network is unavailable. Check your data or wifi connection."),
+                ),
+              )
+            ]),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('RETRY'),
                 onPressed: () {
                   doActionBeforeCloseDialog();
                   Navigator.of(context).pop();
