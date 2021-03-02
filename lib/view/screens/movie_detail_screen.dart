@@ -96,7 +96,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       minHeight: MediaQuery.of(context).size.height - 40,
                     ),
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: movieDetail.casts.length == 0
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Column(children: [
