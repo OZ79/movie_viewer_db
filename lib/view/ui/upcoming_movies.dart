@@ -74,32 +74,44 @@ class MoviePageView extends StatefulWidget {
 }
 
 class _MoviePageViewState extends State<MoviePageView> {
-  PageController _pageController;
+  PageController _pageControllerP;
+  PageController _pageControllerL;
+  double _pageHeight;
 
   @override
   void initState() {
     super.initState();
 
-    _pageController =
-        PageController(viewportFraction: Device.get().isPhone ? 0.91 : 0.75);
+    _pageHeight = Device.get().isPhone ? 270 : 290;
+    double imageWidth = _pageHeight * 500 / 281;
+    _pageControllerP = PageController(viewportFraction: 0.9);
+    _pageControllerL = PageController(
+        viewportFraction:
+            0.05 + imageWidth / max(Device.screenWidth, Device.screenHeight));
+  }
+
+  PageController get pageController {
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? _pageControllerP
+        : _pageControllerL;
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageControllerP.dispose();
+    _pageControllerL.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Device.get().isPhone ? 300 : 320,
       child: Column(
         children: <Widget>[
           SizedBox(
-              height: Device.get().isPhone ? 270 : 290,
+              height: _pageHeight,
               child: PageView.builder(
-                  controller: _pageController,
+                  controller: pageController,
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final movie = widget.data[index];
@@ -108,12 +120,12 @@ class _MoviePageViewState extends State<MoviePageView> {
                       imageUrl: "$IMAGE_URL_500${movie.backPoster}",
                       title: movie.title,
                       index: index,
-                      controller: _pageController,
+                      controller: pageController,
                     );
                   })),
           Expanded(
             child: LineIndiator(
-              controller: _pageController,
+              controller: pageController,
             ),
           ),
         ],
@@ -147,9 +159,7 @@ class _MovieItemState extends State<MovieItem> {
   void initState() {
     super.initState();
 
-    if (Device.get().isPhone) {
-      widget.controller.addListener(_handleChange);
-    }
+    if (Device.get().isPhone) widget.controller.addListener(_handleChange);
   }
 
   @override
@@ -186,9 +196,6 @@ class _MovieItemState extends State<MovieItem> {
             imageUrl: widget.imageUrl,
             imageBuilder: (context, imageProvider) {
               return Container(
-                width: MediaQuery.of(context).size.shortestSide < 600
-                    ? double.infinity
-                    : 500,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
@@ -206,9 +213,8 @@ class _MovieItemState extends State<MovieItem> {
                 ),
               );
             },
-            placeholder: (context, url) => Align(
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator()),
+            placeholder: (context, url) =>
+                Center(child: const CircularProgressIndicator()),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
