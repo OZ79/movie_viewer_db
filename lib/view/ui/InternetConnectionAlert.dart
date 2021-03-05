@@ -56,7 +56,7 @@ mixin InternetConnectionAlert<T extends StatefulWidget,
               )
             ]),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('RETRY'),
                 onPressed: () {
                   doActionBeforeCloseDialog();
@@ -93,7 +93,7 @@ mixin InternetConnectionAlert<T extends StatefulWidget,
               )
             ]),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('RETRY'),
                 onPressed: () {
                   doActionBeforeCloseDialog();

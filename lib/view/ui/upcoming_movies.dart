@@ -74,8 +74,7 @@ class MoviePageView extends StatefulWidget {
 }
 
 class _MoviePageViewState extends State<MoviePageView> {
-  PageController _pageControllerP;
-  PageController _pageControllerL;
+  PageController _pageController;
   double _pageHeight;
 
   @override
@@ -83,35 +82,37 @@ class _MoviePageViewState extends State<MoviePageView> {
     super.initState();
 
     _pageHeight = Device.get().isPhone ? 270 : 290;
-    double imageWidth = _pageHeight * 500 / 281;
-    _pageControllerP = PageController(viewportFraction: 0.9);
-    _pageControllerL = PageController(
-        viewportFraction:
-            0.05 + imageWidth / max(Device.screenWidth, Device.screenHeight));
+    _pageController = PageController(viewportFraction: 0.9);
   }
 
-  PageController get pageController {
-    return MediaQuery.of(context).orientation == Orientation.portrait
-        ? _pageControllerP
-        : _pageControllerL;
+  bool get isPortrait {
+    return MediaQuery.of(context).orientation == Orientation.portrait;
   }
 
   @override
   void dispose() {
-    _pageControllerP.dispose();
-    _pageControllerL.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
+  /*void jumpToPage() {
+    double page = _pageController.page;
+    _pageController.jumpToPage(0);
+    _pageController.jumpToPage(page.toInt());
+  }*/
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Column(
+    return OrientationBuilder(builder: (_, orientation) {
+      /*if (orientation == Orientation.landscape && _pageController.hasClients) {
+        Future.delayed(Duration(milliseconds: 2000), jumpToPage);
+      }*/
+      return Column(
         children: <Widget>[
           SizedBox(
               height: _pageHeight,
               child: PageView.builder(
-                  controller: pageController,
+                  controller: _pageController,
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final movie = widget.data[index];
@@ -120,17 +121,19 @@ class _MoviePageViewState extends State<MoviePageView> {
                       imageUrl: "$IMAGE_URL_500${movie.backPoster}",
                       title: movie.title,
                       index: index,
-                      controller: pageController,
+                      controller: Device.get().isPhone && isPortrait
+                          ? _pageController
+                          : null,
                     );
                   })),
           Expanded(
             child: LineIndiator(
-              controller: pageController,
+              controller: _pageController,
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -145,7 +148,7 @@ class MovieItem extends StatefulWidget {
       @required this.imageUrl,
       @required this.title,
       @required this.index,
-      @required this.controller})
+      this.controller})
       : super(key: key);
 
   @override
@@ -159,29 +162,34 @@ class _MovieItemState extends State<MovieItem> {
   void initState() {
     super.initState();
 
-    if (Device.get().isPhone) widget.controller.addListener(_handleChange);
+    widget.controller?.addListener(_handleChange);
   }
 
   @override
   void didUpdateWidget(MovieItem oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
-      oldWidget.controller.removeListener(_handleChange);
-      widget.controller.addListener(_handleChange);
+      oldWidget.controller?.removeListener(_handleChange);
+      widget.controller?.addListener(_handleChange);
+      if (widget.controller != null) setAlignment();
     }
+  }
+
+  void setAlignment() {
+    final offset = widget.index -
+        (widget.controller.page ?? widget.controller.initialPage);
+    _alignment = Alignment(offset * 3, 0);
   }
 
   void _handleChange() {
     setState(() {
-      final offset = widget.index -
-          (widget.controller.page ?? widget.controller.initialPage);
-      _alignment = Alignment(offset * 3, 0);
+      setAlignment();
     });
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_handleChange);
+    widget.controller?.removeListener(_handleChange);
     super.dispose();
   }
 
@@ -207,7 +215,11 @@ class _MovieItemState extends State<MovieItem> {
                   ],
                   image: DecorationImage(
                     alignment: _alignment,
-                    fit: Device.get().isPhone ? BoxFit.none : BoxFit.cover,
+                    fit: Device.get().isPhone &&
+                            MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                        ? BoxFit.none
+                        : BoxFit.cover,
                     image: imageProvider,
                   ),
                 ),

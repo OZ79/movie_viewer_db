@@ -33,7 +33,7 @@ dependencies:
   cached_network_image: ^2.3.3
   flutter_custom_clippers: ^1.1.2
   transparent_image: ^1.0.0
-  device_preview: ^0.5.5
+  device_preview: ^0.6.2-beta
   outline_search_bar: ^1.0.2
 
 dev_dependencies:
