@@ -43,13 +43,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
       label: Text(items[index]['name'],
           style: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             color: const Color(0xFF1E88E5),
           )),
     );
   }
 
-  Widget buildCompanyItem(List<dynamic> items, int index) {
+  Widget buildProdCompanyItem(List<dynamic> items, int index) {
     final logoUrl = '$IMAGE_URL_92${items[index]['logo_path']}';
     return Container(
         padding: const EdgeInsets.all(2),
@@ -60,7 +60,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
             ),
             borderRadius: BorderRadius.circular(8)),
         child:
-            Image.network(logoUrl, width: 43, height: 43, fit: BoxFit.contain));
+            Image.network(logoUrl, width: 41, height: 41, fit: BoxFit.contain));
   }
 
   Widget buildGenreItem(List<dynamic> items, int index) {
@@ -68,7 +68,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
       backgroundColor: Colors.grey.withOpacity(0.03),
       label: Text(items[index]['name'],
           style: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             color: const Color(0xFF1E88E5),
           )),
     );
@@ -104,7 +104,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           Column(children: [
                             Header(backPosterUrl),
                             Row(children: [
-                              SizedBox(width: 165),
+                              const SizedBox(width: 165),
                               Column(children: [
                                 SizedBox(
                                     width:
@@ -121,7 +121,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           if (movieDetail.prodCountries.length != 0)
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 12, right: 12, top: 15, bottom: 20),
+                                  left: 12, right: 12, top: 12),
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: WrapLayout(
@@ -136,20 +136,21 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                             ),
                           if (movieDetail.prodCompanies.length != 0)
                             Padding(
-                                padding: EdgeInsets.only(left: 12, right: 12),
+                                padding: const EdgeInsets.only(
+                                    left: 12, right: 12, top: 12),
                                 child: WrapLayout(
                                     itemCount: movieDetail.prodCompanies.length,
                                     alignment: WrapAlignment.center,
                                     spacing: 12,
                                     runSpacing: 5,
                                     itemBuilder: (context, index) {
-                                      return buildCompanyItem(
+                                      return buildProdCompanyItem(
                                           movieDetail.prodCompanies, index);
                                     })),
                           if (movieDetail.genres.length != 0)
                             Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 20, bottom: 20, left: 12, right: 12),
+                                    left: 12, right: 12, top: 12),
                                 child: WrapLayout(
                                     itemCount: movieDetail.genres.length,
                                     alignment: WrapAlignment.center,
@@ -160,7 +161,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                           movieDetail.genres, index);
                                     })),
                           Padding(
-                            padding: const EdgeInsets.all(12.0),
+                            padding: const EdgeInsets.only(
+                                left: 12, right: 12, top: 12),
                             child: Column(children: [
                               Text(movieDetail.title,
                                   textAlign: TextAlign.center,
@@ -169,16 +171,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                   style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 23,
+                                    fontSize: 22.5,
                                     color: const Color(0xFF1E88E5),
                                   )),
-                              SizedBox(height: 15),
+                              const SizedBox(height: 5),
                               Text(
                                 movieDetail.overview,
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 20,
+                                    fontSize: 19.5,
                                     color: const Color(0xFF1E88E5)),
                               )
                             ]),
@@ -203,7 +205,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                             ),
                         ]),
                   ),
-                  Poster(posterUrl: posterUrl),
+                  if (!posterUrl.contains("null")) Poster(posterUrl: posterUrl),
                   Container(
                     margin: const EdgeInsets.only(left: 8, top: 8),
                     width: 40,
@@ -259,10 +261,11 @@ class HeaderImage extends StatelessWidget {
             fit: BoxFit.cover,
             fadeInDuration: const Duration(milliseconds: 200),
             image: url)
-        : Container(
+        : const Image(
             width: double.infinity,
             height: 250,
-            child: const Icon(Icons.image));
+            fit: BoxFit.cover,
+            image: AssetImage('assets/movie_header.jpg'));
   }
 }
 
@@ -307,11 +310,11 @@ class CastItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      margin: EdgeInsets.only(left: 4, right: 4, bottom: 12),
+      margin: EdgeInsets.only(left: 4, right: 4, bottom: 10),
       clipBehavior: Clip.hardEdge,
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Image.network(imageUrl, width: 100, height: 100, fit: BoxFit.cover),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         SizedBox(
           width: 90,
           child: Text(name == null ? '' : name,
@@ -325,7 +328,7 @@ class CastItem extends StatelessWidget {
                 color: const Color(0xFF1E88E5),
               )),
         ),
-        SizedBox(height: 3),
+        const SizedBox(height: 3),
         SizedBox(
           width: 90,
           child: Text(character == null ? '' : character,

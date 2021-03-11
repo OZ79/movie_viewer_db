@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="movie_viewer_db"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Movie Viewer"
+        android:icon="@mipmap/mv_launcher">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

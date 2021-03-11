@@ -74,7 +74,12 @@ class MovieItem extends StatelessWidget {
                       child: !imageUrl.contains("null")
                           ? Image(
                               fit: BoxFit.cover, image: NetworkImage(imageUrl))
-                          : const Icon(Icons.movie))),
+                          : Container(
+                              color: Colors.black.withOpacity(0.03),
+                              child: Image(
+                                  fit: BoxFit.contain,
+                                  image: AssetImage('assets/movie_icon.png')),
+                            ))),
               const SizedBox(width: 8),
               Container(
                 height: imageHeight,
@@ -152,30 +157,30 @@ double getFontSize(BuildContext context) {
   //print(MediaQuery.of(context).orientation);
 
   if (MediaQuery.of(context).size.aspectRatio > 0.9) {
-    return 19;
+    return 17;
   }
 
   if (screenWidth <= 320) {
-    return 17;
+    return 15;
   }
   if (screenWidth <= 360) {
-    return 19;
+    return 17;
   }
   if (screenWidth <= 411) {
-    return 19;
+    return 17;
   }
   if (screenWidth <= 480) {
-    return 19;
+    return 17;
   }
   if (screenWidth <= 540) {
-    return 23;
+    return 21;
   }
   if (screenWidth <= 768) {
-    return 23;
+    return 21;
   }
   if (screenWidth <= 800) {
-    return 24;
+    return 22;
   }
 
-  return 19;
+  return 16;
 }

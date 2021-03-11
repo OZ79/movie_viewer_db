@@ -95,18 +95,9 @@ class _MoviePageViewState extends State<MoviePageView> {
     super.dispose();
   }
 
-  /*void jumpToPage() {
-    double page = _pageController.page;
-    _pageController.jumpToPage(0);
-    _pageController.jumpToPage(page.toInt());
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (_, orientation) {
-      /*if (orientation == Orientation.landscape && _pageController.hasClients) {
-        Future.delayed(Duration(milliseconds: 2000), jumpToPage);
-      }*/
       return Column(
         children: <Widget>[
           SizedBox(
@@ -197,31 +188,35 @@ class _MovieItemState extends State<MovieItem> {
     return Column(children: <Widget>[
       Expanded(
         child: Padding(
-          key: ValueKey('Padding_${widget.imageUrl}'),
-          padding: const EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            child: ClipRRect(
-              clipBehavior: Clip.hardEdge,
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: Image.network(widget.imageUrl,
-                  fit: Device.get().isPhone &&
-                          MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                      ? BoxFit.none
-                      : BoxFit.cover,
-                  alignment: _alignment),
-            ),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(3, 4),
-                    blurRadius: 6,
-                    color: Colors.black26,
-                  )
-                ]),
+          padding: const EdgeInsets.all(7),
+          child: CachedNetworkImage(
+            imageUrl: widget.imageUrl,
+            imageBuilder: (context, imageProvider) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(3, 4),
+                      blurRadius: 6,
+                      color: Colors.black26,
+                    )
+                  ],
+                  image: DecorationImage(
+                    alignment: _alignment,
+                    fit: Device.get().isPhone &&
+                            MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                        ? BoxFit.none
+                        : BoxFit.cover,
+                    image: imageProvider,
+                  ),
+                ),
+              );
+            },
+            placeholder: (context, url) =>
+                Center(child: const CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
       ),
