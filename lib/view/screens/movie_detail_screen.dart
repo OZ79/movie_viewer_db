@@ -112,7 +112,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                     child: Rating(movieDetail.rating)),
                                 Text(movieDetail.releaseDate,
                                     style: TextStyle(
-                                      fontSize: 17,
+                                      fontSize: 16.5,
                                       color: const Color(0xFF1E88E5),
                                     ))
                               ])

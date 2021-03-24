@@ -1,9 +1,11 @@
+import 'dart:collection';
+
 import 'models/movie.dart';
 import 'models/movie_page.dart';
 import 'movie_repositories.dart';
 
 class DataCache {
-  static final Map<MovieType, List<MoviePage>> _moviePages = {};
+  static final _moviePages = HashMap<MovieType, List<MoviePage>>();
 
   static MoviePage getMoviePage(MovieType movieType, int page) {
     return _moviePages[movieType][page - 1];

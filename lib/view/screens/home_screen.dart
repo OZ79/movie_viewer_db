@@ -65,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen>
           SizedBox(
               height: Device.get().isPhone ? 300 : 320,
               child: UpcomingMoviesWidget(
-                  key: PageStorageKey('UpcomingMoviesWidget')))
+                  key: PageStorageKey('UpcomingMoviesWidget'),
+                  movieDetailBloc: _movieDetailBloc))
         ]),
         const SizedBox(height: 20),
         BlocBuilder<MovieBloc, MovieState>(buildWhen: (prevstate, state) {

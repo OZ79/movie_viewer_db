@@ -33,7 +33,6 @@ class MovieItem extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     final imageHeight = 138.0;
     return GestureDetector(
-      key: ValueKey('MovieItem_$movieId'),
       onTap: () {
         navigationBloc.add(NavigateToEvent(
             pageIndex: navigationBloc.state.pageIndex, bottom: false));

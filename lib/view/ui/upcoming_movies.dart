@@ -6,16 +6,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movie_viewer_db/bloc/movie_bloc/movie_state.dart';
 import 'package:movie_viewer_db/bloc/base_movie_state.dart';
+import 'package:movie_viewer_db/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie_viewer_db/data/PageStorageIndetifier.dart';
 import 'package:movie_viewer_db/data/models/movie.dart';
 import 'package:movie_viewer_db/data/movie_repositories.dart';
 import 'package:movie_viewer_db/util/flutter_device_type.dart';
+import 'package:movie_viewer_db/view/screens/movie_detail_screen.dart';
 import 'package:movie_viewer_db/view/ui/page_view_indicator.dart';
 
 import '../../config.dart';
 
 class UpcomingMoviesWidget extends StatelessWidget {
-  UpcomingMoviesWidget({key}) : super(key: key);
+  final MovieDetailBloc movieDetailBloc;
+
+  UpcomingMoviesWidget({key, @required this.movieDetailBloc}) : super(key: key);
 
   int getStartIndex(BuildContext context, int length) {
     int startIndex = PageStorage.of(context)
@@ -48,7 +52,9 @@ class UpcomingMoviesWidget extends StatelessWidget {
           state.movies[MovieType.upcoming] != null) {
         final movies = state.movies[MovieType.upcoming];
         final startIndex = getStartIndex(context, movies.length - 6);
-        return MoviePageView(data: movies.sublist(startIndex, startIndex + 5));
+        return MoviePageView(
+            data: movies.sublist(startIndex, startIndex + 5),
+            movieDetailBloc: movieDetailBloc);
       } else if (state is MovieErrorState) {
         return Center(
           child: Text(
@@ -65,9 +71,10 @@ class UpcomingMoviesWidget extends StatelessWidget {
 }
 
 class MoviePageView extends StatefulWidget {
+  final MovieDetailBloc movieDetailBloc;
   final List<Movie> data;
 
-  MoviePageView({key, this.data}) : super(key: key);
+  MoviePageView({key, this.data, this.movieDetailBloc}) : super(key: key);
 
   @override
   _MoviePageViewState createState() => _MoviePageViewState();
@@ -107,14 +114,27 @@ class _MoviePageViewState extends State<MoviePageView> {
                   itemCount: widget.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final movie = widget.data[index];
-                    return MovieItem(
-                      key: ValueKey('MovieItem_${movie.backPoster}'),
-                      imageUrl: "$IMAGE_URL_500${movie.backPoster}",
-                      title: movie.title,
-                      index: index,
-                      controller: Device.get().isPhone && isPortrait
-                          ? _pageController
-                          : null,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return BlocProvider.value(
+                              value: widget.movieDetailBloc,
+                              child: MovieDetailScreen(movie.id),
+                            );
+                          }),
+                        );
+                      },
+                      child: MovieItem(
+                        key: ValueKey('MovieItem_${movie.backPoster}'),
+                        imageUrl: "$IMAGE_URL_500${movie.backPoster}",
+                        title: movie.title,
+                        index: index,
+                        controller: Device.get().isPhone && isPortrait
+                            ? _pageController
+                            : null,
+                      ),
                     );
                   })),
           Expanded(

@@ -45,7 +45,7 @@ class StarRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Row(
+    return Row(
       mainAxisAlignment: mainAxisAlignment,
       children: new List.generate(
         starCount,

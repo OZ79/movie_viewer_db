@@ -45,7 +45,7 @@ class PreviewMovieList extends StatelessWidget {
                   fontSize: 15,
                   color: const Color(0xFF1E88E5)),
             ),
-            GestureDetector(
+            InkWell(
               onTap: () {
                 navigationBloc
                     .add(NavigateToEvent(pageIndex: 1, movieType: movieType));
@@ -54,7 +54,7 @@ class PreviewMovieList extends StatelessWidget {
                 "See more ...",
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 17,
+                    fontSize: 18,
                     color: const Color(0xFF1E88E5)),
               ),
             ),
