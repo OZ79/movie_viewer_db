@@ -104,47 +104,45 @@ class _MoviePageViewState extends State<MoviePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(builder: (_, orientation) {
-      return Column(
-        children: <Widget>[
-          SizedBox(
-              height: _pageHeight,
-              child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: widget.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final movie = widget.data[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return BlocProvider.value(
-                              value: widget.movieDetailBloc,
-                              child: MovieDetailScreen(movie.id),
-                            );
-                          }),
-                        );
-                      },
-                      child: MovieItem(
-                        key: ValueKey('MovieItem_${movie.backPoster}'),
-                        imageUrl: "$IMAGE_URL_500${movie.backPoster}",
-                        title: movie.title,
-                        index: index,
-                        controller: Device.get().isPhone && isPortrait
-                            ? _pageController
-                            : null,
-                      ),
-                    );
-                  })),
-          Expanded(
-            child: LineIndiator(
-              controller: _pageController,
-            ),
+    return Column(
+      children: <Widget>[
+        SizedBox(
+            height: _pageHeight,
+            child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final movie = widget.data[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return BlocProvider.value(
+                            value: widget.movieDetailBloc,
+                            child: MovieDetailScreen(movie.id),
+                          );
+                        }),
+                      );
+                    },
+                    child: MovieItem(
+                      key: ValueKey('MovieItem_${movie.backPoster}'),
+                      imageUrl: "$IMAGE_URL_500${movie.backPoster}",
+                      title: movie.title,
+                      index: index,
+                      controller: Device.get().isPhone && isPortrait
+                          ? _pageController
+                          : null,
+                    ),
+                  );
+                })),
+        Expanded(
+          child: LineIndiator(
+            controller: _pageController,
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }
 
