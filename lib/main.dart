@@ -15,7 +15,7 @@ import 'bloc/moviesearch_bloc/moviesearch_bloc.dart';
 import 'bloc/navigation_bloc/navigation_bloc.dart';
 import 'bloc/navigation_bloc/navigation_event.dart';
 import 'bloc/navigation_bloc/navigation_state.dart';
-import 'bloc/simple_bloc_observer.dart';
+//import 'bloc/simple_bloc_observer.dart';
 import 'data/movie_repositories.dart';
 import 'view/screens/movielist_screen.dart';
 import 'view/screens/search_screen.dart';
