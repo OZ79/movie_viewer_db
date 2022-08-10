@@ -17,19 +17,18 @@ class Poster extends StatelessWidget {
           fit: BoxFit.cover,
           frameBuilder:
               (_, Widget child, int frame, bool wasSynchronouslyLoaded) {
-            if (!wasSynchronouslyLoaded && frame != null ||
-                wasSynchronouslyLoaded && frame >= 1) {
+            //print("$wasSynchronouslyLoaded" + " " + "$frame");
+            if (frame != null || wasSynchronouslyLoaded) {
               aligntment = Alignment(-0.9, 1.0);
               opacity = 1;
             }
 
             return AnimatedAlign(
-              alignment:
-                  aligntment, // frame == 0 ? Alignment(-0.9, 0.0) : Alignment(-0.9, 1),
+              alignment: aligntment,
               duration: const Duration(seconds: 1),
               curve: Curves.easeOutQuint,
               child: AnimatedOpacity(
-                opacity: opacity, //frame == 0 ? 0 : 1,
+                opacity: opacity,
                 duration: const Duration(milliseconds: 200),
                 child: Container(
                     decoration: BoxDecoration(
